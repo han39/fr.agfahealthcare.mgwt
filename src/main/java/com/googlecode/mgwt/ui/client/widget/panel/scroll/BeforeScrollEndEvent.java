@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class BeforeScrollEndEvent extends GwtEvent<BeforeScrollEndEvent.Handler> {
 
 	public interface Handler extends EventHandler {
-		public void onBeforeScrollStart(BeforeScrollEndEvent event);
+		public void onBeforeScrollEnd(BeforeScrollEndEvent event);
 	}
 
 	private static GwtEvent.Type<BeforeScrollEndEvent.Handler> TYPE = new Type<BeforeScrollEndEvent.Handler>();
@@ -43,7 +43,7 @@ public class BeforeScrollEndEvent extends GwtEvent<BeforeScrollEndEvent.Handler>
 
 	@Override
 	protected void dispatch(Handler handler) {
-		handler.onBeforeScrollStart(this);
+		handler.onBeforeScrollEnd(this);
 	}
 
 	public TouchEvent<?> getEvent() {
