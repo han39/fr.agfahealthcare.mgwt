@@ -1213,14 +1213,14 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 																		}-*/;
 
 	private native int getMarginHeight(Element el)/*-{
-																	
+
 																	var top = 0;
 																	var bottom = 0;
 																	var style = $wnd.getComputedStyle(el);
-																	
+
 																	top = parseInt(style.marginTop, 10) || 0;
 																	bottom = parseInt(style.marginBottom, 10) || 0;
-																	
+
 																	return top + bottom;
 																	}-*/;
 
@@ -1228,10 +1228,10 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 																var left = 0;
 																var right = 0;
 																var style = $wnd.getComputedStyle(el);
-																
+
 																left = parseInt(style.marginLeft, 10) || 0;
 																right = parseInt(style.marginRight, 10) || 0;
-																
+
 																return left + right;
 																}-*/;
 
@@ -1240,7 +1240,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 																					}-*/;
 
 	private native int getMouseWheelVelocityY(NativeEvent evt)/*-{
-																					
+
 																					var val = (evt.detail * 40) || evt.wheelDeltaY || 0;
 																					return Math.round(val);
 																					}-*/;

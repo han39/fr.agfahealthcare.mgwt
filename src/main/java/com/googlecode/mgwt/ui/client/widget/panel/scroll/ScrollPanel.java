@@ -14,7 +14,6 @@
 package com.googlecode.mgwt.ui.client.widget.panel.scroll;
 
 import java.util.Iterator;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -35,260 +34,267 @@ import com.googlecode.mgwt.ui.client.widget.panel.scroll.impl.ScrollPanelImpl;
  */
 public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 
-  protected final ScrollPanelImpl impl = GWT.create(ScrollPanelImpl.class);
+	protected final ScrollPanelImpl impl = GWT.create(ScrollPanelImpl.class);
 
-  public ScrollPanel() {
-    initWidget(impl);
-  }
+	public ScrollPanel() {
+		initWidget(impl);
+	}
 
-  @Override
-  public void setWidget(Widget w) {
-    impl.setWidget(w);
-  }
+	/**
+	 * Methods only exists to make scroll panel work with UiBinder @use {@link #setWidget(IsWidget)}
+	 */
+	@Override
+	public void add(Widget w) {
+		impl.add(w);
 
-  public void setWidget(IsWidget w) {
-    impl.setWidget(w);
-  }
+	}
 
-  /**
-   * Methods only exists to make scroll panel work with UiBinder @use {@link #setWidget(IsWidget)}
-   */
-  @Override
-  public void add(Widget w) {
-    impl.add(w);
+	public HandlerRegistration addBeforeScrollEndHandler(BeforeScrollEndEvent.Handler handler) {
+		return impl.addBeforeScrollEndHandler(handler);
+	}
 
-  }
+	public HandlerRegistration addBeforeScrollMoveHandler(BeforeScrollMoveEvent.Handler handler) {
+		return impl.addBeforeScrollMoveHandler(handler);
+	}
 
-  @Override
-  public void clear() {
-    impl.clear();
+	public HandlerRegistration addBeforeScrollStartHandler(BeforeScrollStartEvent.Handler handler) {
+		return impl.addBeforeScrollStartHandler(handler);
+	}
 
-  }
+	public HandlerRegistration addScrollAnimationEndHandler(ScrollAnimationEndEvent.Handler handler) {
+		return impl.addScrollAnimationEndHandler(handler);
+	}
 
-  @Override
-  public Iterator<Widget> iterator() {
-    return impl.iterator();
-  }
+	public HandlerRegistration addScrollAnimationMoveHandler(ScrollAnimationMoveEvent.Handler handler) {
+		return impl.addScrollAnimationMoveHandler(handler);
+	}
 
-  @Override
-  public boolean remove(Widget w) {
-    return impl.remove(w);
-  }
+	public HandlerRegistration addScrollAnimationStartHandler(
+			ScrollAnimationStartEvent.Handler handler) {
+		return impl.addScrollAnimationStartHandler(handler);
+	}
 
-  public void setOffSetY(int y) {
-    impl.setOffSetY(y);
-  }
+	public HandlerRegistration addScrollEndHandler(ScrollEndEvent.Handler handler) {
+		return impl.addScrollEndHandler(handler);
+	}
 
-  public void setMaxScrollY(int y) {
-    impl.setMaxScrollY(y);
-  }
+	public HandlerRegistration addScrollMoveHandler(ScrollMoveEvent.Handler handler) {
+		return impl.addScrollMoveHandler(handler);
+	}
 
-  public int getMaxScrollY() {
-    return impl.getMaxScrollY();
-  }
+	public HandlerRegistration addScrollRefreshHandler(ScrollRefreshEvent.Handler handler) {
+		return impl.addScrollRefreshHandler(handler);
+	}
 
-  public void setMinScrollY(int y) {
-    impl.setMinScrollY(y);
-  }
+	public HandlerRegistration addScrollStartHandler(ScrollStartEvent.Handler handler) {
+		return impl.addScrollStartHandler(handler);
+	}
 
-  public int getMinScrollY() {
-    return impl.getMinScrollY();
-  }
+	public HandlerRegistration addScrollTouchEndHandler(ScrollTouchEndEvent.Handler handler) {
+		return impl.addScrollTouchEndHandler(handler);
+	}
 
-  /**
-   * Should scrolling in x-axis be enabled
-   *
-   * @param enabled true to enable
-   */
-  public void setScrollingEnabledX(boolean enabled) {
-    impl.setScrollingEnabledX(enabled);
+	@Override
+	public void clear() {
+		impl.clear();
 
-  }
+	}
 
-  /**
-   * Refresh the scroll panel
-   *
-   * This method needs to be called if the content of the child widget has changed without calling
-   * {@link #setWidget(IsWidget)}
-   *
-   * ScrollPanel needs to recalculate sizes.
-   */
-  public void refresh() {
-    impl.refresh();
+	public int getCurrentPageX() {
+		return impl.getCurrentPageX();
+	}
 
-  }
+	public int getCurrentPageY() {
+		return impl.getCurrentPageY();
+	}
 
-  /**
-   * Should scrolling in y-axis be enabled
-   *
-   * @param enabled true to enable
-   */
-  public void setScrollingEnabledY(boolean enabled) {
-    impl.setScrollingEnabledY(enabled);
+	public int getMaxScrollY() {
+		return impl.getMaxScrollY();
+	}
 
-  }
+	public int getMinScrollY() {
+		return impl.getMinScrollY();
+	}
 
-  /**
-   * Use position absolute instead of -webkit-translate
-   *
-   * This is required on android if the scrolling area contains input elements
-   *
-   * default: false
-   *
-   * @param android a boolean.
-   */
-  public void setUsePos(boolean android) {
-    impl.setUsePos(android);
+	public LightArrayInt getPagesX() {
+		return impl.getPagesX();
+	}
 
-  }
+	public LightArrayInt getPagesY() {
+		return impl.getPagesY();
+	}
 
-  public void scrollTo(int x, int y) {
-    impl.scrollTo(x, y, 1);
-  }
+	public int getX() {
+		return impl.getX();
+	}
 
-  public void scrollTo(int x, int y, int time, boolean relative) {
-    impl.scrollTo(x, y, time, relative);
-  }
+	public int getY() {
+		return impl.getY();
+	}
 
-  public void scrollToPage(int pageX, int pageY, int time) {
-    impl.scrollToPage(pageX, pageY, time);
-  }
+	public boolean isScrollingEnabledY() {
+		return impl.isScrollingEnabledY();
+	}
 
-  public void scrollToPage(int pageX, int pageY, int time, boolean issueEvent) {
-    impl.scrollToPage(pageX, pageY, time, issueEvent);
-  }
+	@Override
+	public Iterator<Widget> iterator() {
+		return impl.iterator();
+	}
 
-  public void setBounce(boolean bounce) {
-    impl.setBounce(bounce);
-  }
+	/**
+	 * Refresh the scroll panel
+	 *
+	 * This method needs to be called if the content of the child widget has changed without calling
+	 * {@link #setWidget(IsWidget)}
+	 *
+	 * ScrollPanel needs to recalculate sizes.
+	 */
+	public void refresh() {
+		impl.refresh();
 
-  public void setMomentum(boolean momentum) {
-    impl.setMomentum(momentum);
-  }
+	}
 
-  public void setSnap(boolean snap) {
-    impl.setSnap(snap);
-  }
+	@Override
+	public boolean remove(Widget w) {
+		return impl.remove(w);
+	}
 
-  public void setSnapThreshold(int threshold) {
-    impl.setSnapThreshold(threshold);
-  }
+	public void scrollTo(int x, int y) {
+		impl.scrollTo(x, y, 1);
+	}
 
-  public HandlerRegistration addBeforeScrollStartHandler(BeforeScrollStartEvent.Handler handler) {
-    return impl.addBeforeScrollStartHandler(handler);
-  }
+	public void scrollTo(int x, int y, int time, boolean relative) {
+		impl.scrollTo(x, y, time, relative);
+	}
 
-  public HandlerRegistration addBeforeScrollMoveHandler(BeforeScrollMoveEvent.Handler handler) {
-    return impl.addBeforeScrollMoveHandler(handler);
-  }
+	public void scrollToPage(int pageX, int pageY, int time) {
+		impl.scrollToPage(pageX, pageY, time);
+	}
 
-  public HandlerRegistration addBeforeScrollEndHandler(BeforeScrollEndEvent.Handler handler) {
-    return impl.addBeforeScrollEndHandler(handler);
-  }
+	public void scrollToPage(int pageX, int pageY, int time, boolean issueEvent) {
+		impl.scrollToPage(pageX, pageY, time, issueEvent);
+	}
 
-  public HandlerRegistration addScrollEndHandler(ScrollEndEvent.Handler handler) {
-    return impl.addScrollEndHandler(handler);
-  }
+	public void setAutoHandleResize(boolean handle) {
+		impl.setAutoHandleResize(handle);
+	}
 
-  public HandlerRegistration addScrollStartHandler(ScrollStartEvent.Handler handler) {
-    return impl.addScrollStartHandler(handler);
-  }
+	public void setBounce(boolean bounce) {
+		impl.setBounce(bounce);
+	}
 
-  public HandlerRegistration addScrollMoveHandler(ScrollMoveEvent.Handler handler) {
-    return impl.addScrollMoveHandler(handler);
-  }
+	public void setBounceFactor(double bounceFactor) {
+		impl.setBounceFactor(bounceFactor);
+	}
 
-  public HandlerRegistration addScrollRefreshHandler(ScrollRefreshEvent.Handler handler) {
-    return impl.addScrollRefreshHandler(handler);
-  }
+	public void setHideScrollBar(boolean hideScrollBar) {
+		impl.setHideScrollBar(hideScrollBar);
+	}
 
-  public HandlerRegistration addScrollTouchEndHandler(ScrollTouchEndEvent.Handler handler) {
-    return impl.addScrollTouchEndHandler(handler);
-  }
+	public void setMaxScrollY(int y) {
+		impl.setMaxScrollY(y);
+	}
 
-  public HandlerRegistration addScrollAnimationStartHandler(
-      ScrollAnimationStartEvent.Handler handler) {
-    return impl.addScrollAnimationStartHandler(handler);
-  }
+	public void setMinScrollY(int y) {
+		impl.setMinScrollY(y);
+	}
 
-  public HandlerRegistration addScrollAnimationMoveHandler(ScrollAnimationMoveEvent.Handler handler) {
-    return impl.addScrollAnimationMoveHandler(handler);
-  }
+	public void setMomentum(boolean momentum) {
+		impl.setMomentum(momentum);
+	}
 
-  public HandlerRegistration addScrollAnimationEndHandler(ScrollAnimationEndEvent.Handler handler) {
-    return impl.addScrollAnimationEndHandler(handler);
-  }
+	public void setOffSetMaxY(int height) {
+		impl.setOffSetMaxY(height);
 
-  public int getY() {
-    return impl.getY();
-  }
+	}
 
-  public int getX() {
-    return impl.getX();
-  }
+	public void setOffSetY(int y) {
+		impl.setOffSetY(y);
+	}
 
-  public void setBounceFactor(double bounceFactor) {
-    impl.setBounceFactor(bounceFactor);
-  }
+	/**
+	 * Should scrolling in x-axis be enabled
+	 *
+	 * @param enabled
+	 *           true to enable
+	 */
+	public void setScrollingEnabledX(boolean enabled) {
+		impl.setScrollingEnabledX(enabled);
 
-  /**
-   * @deprecated use {@link #setShowVerticalScrollBar(boolean)}
-   */
-  @Deprecated
-  public void setShowScrollBarX(boolean b) {
-    impl.setShowScrollBarX(b);
-  }
+	}
 
-  /**
-   * @deprecated use {@link #setShowHorizontalScrollBar(boolean)}
-   */
-  @Deprecated
-  public void setShowScrollBarY(boolean b) {
-    impl.setShowScrollBarY(b);
-  }
+	/**
+	 * Should scrolling in y-axis be enabled
+	 *
+	 * @param enabled
+	 *           true to enable
+	 */
+	public void setScrollingEnabledY(boolean enabled) {
+		impl.setScrollingEnabledY(enabled);
 
-  public void setShowHorizontalScrollBar(boolean show) {
-    impl.setShowHorizontalScrollBar(show);
-  }
+	}
 
-  public void setShowVerticalScrollBar(boolean show) {
-    impl.setShowVerticalScrollBar(show);
-  }
+	public void setScrollLock(boolean lock) {
+		impl.setScrollLock(lock);
+	}
 
-  public int getCurrentPageX() {
-    return impl.getCurrentPageX();
-  }
+	public void setShowHorizontalScrollBar(boolean show) {
+		impl.setShowHorizontalScrollBar(show);
+	}
 
-  public int getCurrentPageY() {
-    return impl.getCurrentPageY();
-  }
+	/**
+	 * @deprecated use {@link #setShowVerticalScrollBar(boolean)}
+	 */
+	@Deprecated
+	public void setShowScrollBarX(boolean b) {
+		impl.setShowScrollBarX(b);
+	}
 
-  public void setAutoHandleResize(boolean handle) {
-    impl.setAutoHandleResize(handle);
-  }
+	/**
+	 * @deprecated use {@link #setShowHorizontalScrollBar(boolean)}
+	 */
+	@Deprecated
+	public void setShowScrollBarY(boolean b) {
+		impl.setShowScrollBarY(b);
+	}
 
-  public void setOffSetMaxY(int height) {
-    impl.setOffSetMaxY(height);
+	public void setShowVerticalScrollBar(boolean show) {
+		impl.setShowVerticalScrollBar(show);
+	}
 
-  }
+	public void setSnap(boolean snap) {
+		impl.setSnap(snap);
+	}
 
-  public void setSnapSelector(String selector) {
-    impl.setSnapSelector(selector);
-  }
+	public void setSnapSelector(String selector) {
+		impl.setSnapSelector(selector);
+	}
 
-  public LightArrayInt getPagesY() {
-    return impl.getPagesY();
-  }
+	public void setSnapThreshold(int threshold) {
+		impl.setSnapThreshold(threshold);
+	}
 
-  public LightArrayInt getPagesX() {
-    return impl.getPagesX();
-  }
+	/**
+	 * Use position absolute instead of -webkit-translate
+	 *
+	 * This is required on android if the scrolling area contains input elements
+	 *
+	 * default: false
+	 *
+	 * @param android
+	 *           a boolean.
+	 */
+	public void setUsePos(boolean android) {
+		impl.setUsePos(android);
 
-  public void setHideScrollBar(boolean hideScrollBar) {
-    impl.setHideScrollBar(hideScrollBar);
-  }
+	}
 
-  public void setScrollLock(boolean lock) {
-    impl.setScrollLock(lock);
-  }
+	public void setWidget(IsWidget w) {
+		impl.setWidget(w);
+	}
+
+	@Override
+	public void setWidget(Widget w) {
+		impl.setWidget(w);
+	}
 }
