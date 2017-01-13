@@ -23,8 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class DOMImplIE10 extends DOMImplIE9 {
   
-  static
-  {
+  static {
     DOMImplStandard.addCaptureEventDispatchers(getCaptureEventDispatchers());
     DOMImplStandard.addBitlessEventDispatchers(getBitlessEventDispatchers());
     capturePointerEvents();
@@ -32,38 +31,68 @@ public class DOMImplIE10 extends DOMImplIE9 {
   
   /**
    * Lets have the same behaviour as IOS where the target element continues to receive Pointer events
-   * even when the pointer has moved off the element up until MSPointerUp has occurred.
+   * even when the pointer has moved off the element up until PointerUp has occurred.
    * 
    *  Do not do pointer capture on input or textarea elements, all sorts of problems arise if you do!
    *  For example if you type into a password field you cannot set the cursor to the end of
    *  the text when re-entering it and so you cannot edit your password
    */
   private native static void capturePointerEvents() /*-{
+    if ($wnd.PointerEvent) {
+      $wnd.addEventListener('pointerdown',
+        $entry(function(evt) {
+          if ((evt.target.tagName !== 'INPUT') && (evt.target.tagName !== 'TEXTAREA'))  {
+            evt.target.setPointerCapture(evt.pointerId);
+          }
+        }), true);
+    }
+    else {
       $wnd.addEventListener('MSPointerDown',
         $entry(function(evt) {
           if ((evt.target.tagName !== 'INPUT') && (evt.target.tagName !== 'TEXTAREA'))  {
             evt.target.msSetPointerCapture(evt.pointerId);
           }
         }), true);
+    }
   }-*/;
 
   
   public static native JavaScriptObject getCaptureEventDispatchers() /*-{
-    return {
-      MSPointerDown:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
-      MSPointerUp:     @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
-      MSPointerMove:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
-      MSPointerCancel: @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*)
-    };
+    if ($wnd.PointerEvent) {
+      return {
+        pointerdown:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
+        pointerup:     @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
+        pointermove:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
+        pointercancel: @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*)
+      };
+    }
+    else {
+      return {
+        MSPointerDown:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
+        MSPointerUp:     @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
+        MSPointerMove:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*),
+        MSPointerCancel: @com.google.gwt.user.client.impl.DOMImplStandard::dispatchCapturedMouseEvent(*)
+      };
+    }
   }-*/;
 
   public static native JavaScriptObject getBitlessEventDispatchers() /*-{
-    return {
-      MSPointerDown:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
-      MSPointerUp:     @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
-      MSPointerMove:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
-      MSPointerCancel: @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*)
-    };
+    if ($wnd.PointerEvent) {
+      return {
+        pointerdown:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
+        pointerup:     @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
+        pointermove:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
+        pointercancel: @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*)
+      };
+    }
+    else {
+      return {
+        MSPointerDown:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
+        MSPointerUp:     @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
+        MSPointerMove:   @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*),
+        MSPointerCancel: @com.google.gwt.user.client.impl.DOMImplStandard::dispatchEvent(*)
+      };
+    }
   }-*/;
 
 }

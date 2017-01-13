@@ -82,13 +82,6 @@ public abstract class TouchWidget extends Widget implements HasTouchHandlers, Ha
 	@Override
 	public HandlerRegistration addTouchHandler(TouchHandler handler) {
 	    return impl.addTouchHandler(this, handler);
-//		HandlerRegistrationCollection handlerRegistrationCollection = new HandlerRegistrationCollection();
-//
-//		handlerRegistrationCollection.addHandlerRegistration(addTouchCancelHandler(handler));
-//		handlerRegistrationCollection.addHandlerRegistration(addTouchStartHandler(handler));
-//		handlerRegistrationCollection.addHandlerRegistration(addTouchEndHandler(handler));
-//		handlerRegistrationCollection.addHandlerRegistration(addTouchMoveHandler(handler));
-//		return handlerRegistrationCollection;
 	}
 
   @Override

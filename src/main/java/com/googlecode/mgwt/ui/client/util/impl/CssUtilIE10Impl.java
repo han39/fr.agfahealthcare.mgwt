@@ -111,7 +111,7 @@ public class CssUtilIE10Impl implements CssUtilImpl {
   }-*/;
 
   @Override
-  public native void setTransistionTimingFunction(Element element, String string) /*-{
+  public native void setTransistionTimingFunction(Element el, String string) /*-{
     el.transitionTimingFunction = string;
   }-*/;
 
@@ -123,7 +123,7 @@ public class CssUtilIE10Impl implements CssUtilImpl {
 
   @Override
   public void translatePercent(Element el, double x, double y) {
-    String cssText = "translate3d(" + x + "%, " + y + "%,0%)";
+    String cssText = "translate3d(" + x + "%, " + y + "%,0)";
     _translate(el, cssText);
   }
 

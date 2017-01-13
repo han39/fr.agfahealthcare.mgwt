@@ -16,15 +16,35 @@
  */
  -->
 <module>
-    <inherits name='com.google.gwt.user.User'/>
-    <inherits name='com.googlecode.mgwt.collection.GwtCollections'/>
-    <!-- Eclipse mixes classpaths so we need to exclude tests here -->
-    <source path='client' excludes='**/*Test.java'/>
+  <inherits name='com.google.gwt.user.User' />
+  <inherits name='com.googlecode.mgwt.collection.GwtCollections' />
+  <!-- Eclipse mixes classpaths so we need to exclude tests here -->
+  <source path='client' excludes='**/*Test.java' />
+  <define-property name="mgwt.pointermodel" values="pointer,mouse_touch" />
+  <property-provider name="mgwt.pointermodel"><![CDATA[
+      // Detect pointer event support
+      if (window.PointerEvent || window.MSPointerEvent)
+      {
+        return "pointer";
+      }
+      // mouse or touch or both
+      return "mouse_touch";
+    ]]></property-provider>
     
-    <define-property name="mgwt.formfactor" values="phone, tablet, desktop" />
-    <property-provider name="mgwt.formfactor"><![CDATA[
-        // Look for the formfactor as a url argument.
-        var args = location.search;
+  <!-- collaspe property so does not add additional compile time permutations -->
+  <collapse-property name="mgwt.pointermodel" values="*"/>
+  <!-- when ie10 then always pointer model -->
+  <set-property name="mgwt.pointermodel" value="pointer">
+    <any>
+      <when-property-is name="user.agent" value="ie10"/>
+    </any>
+  </set-property>
+  
+  <define-property name="mgwt.formfactor" values="phone, tablet, desktop" />
+  <property-provider name="mgwt.formfactor"><![CDATA[
+      // Look for the formfactor as a url argument.
+      var args = location.search;
+      if (args) {
         var start = args.indexOf("formfactor");
         if (start >= 0) {
           var value = args.substring(start);
@@ -35,7 +55,7 @@
           }
           return value.substring(begin, end);
         }
-
+      }
       // Detect form factor from user agent.
       var ua = navigator.userAgent.toLowerCase();
       if (ua.indexOf("windows phone 8") != -1) {
@@ -94,11 +114,19 @@
         </all>
     </replace-with>
 
-    <replace-with class="com.google.gwt.user.client.impl.DOMImplIE10">
-        <when-type-is class="com.google.gwt.user.client.impl.DOMImpl"/>
-        <all>
-            <when-property-is name="user.agent" value="ie10"/>
-        </all>
-    </replace-with>
-    
+  <replace-with class="com.google.gwt.user.client.impl.DOMImplIE10">
+    <when-type-is class="com.google.gwt.user.client.impl.DOMImpl" />
+    <all>
+      <when-property-is name="user.agent" value="ie10" />
+    </all>
+  </replace-with>
+
+  <replace-with class="com.google.gwt.user.client.impl.DOMImplWebkitPointer">
+    <when-type-is class="com.google.gwt.user.client.impl.DOMImpl" />
+    <all>
+      <when-property-is name="mgwt.pointermodel" value="pointer" />
+      <when-property-is name="user.agent" value="safari" />
+    </all>
+  </replace-with>
+
 </module>

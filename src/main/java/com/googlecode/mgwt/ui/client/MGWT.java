@@ -40,6 +40,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.util.OrientationHandler;
 import com.googlecode.mgwt.ui.client.widget.main.IOS71BodyBug;
 import com.googlecode.mgwt.ui.client.widget.main.MainResourceHolder;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchSupport;
 
 /**
  * The MGWT Object is used to apply settings for an MGWT App. It also provides an instance of
@@ -167,9 +168,14 @@ public class MGWT {
     if (settings.isPreventScrolling() && getOsDetection().isIOs()) {
       BodyElement body = Document.get().getBody();
       setupPreventScrolling(body);
-
     }
 
+    if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents() && TouchSupport.isTouchEventsSupported()) {
+      // we cancel mouse events on devices that might support touch and a native
+      // touch is in progress
+      TouchSupport.cancelMouseEventsDuringTouch();
+    }
+    
     if (settings.isDisablePhoneNumberDetection()) {
       MetaElement fullScreenMetaTag = Document.get().createMetaElement();
       fullScreenMetaTag.setName("format-detection");
@@ -341,7 +347,7 @@ public class MGWT {
   }-*/;
 
   private static void setupPreventScrollingIE10(Element el) {
-    el.setAttribute("style", "-ms-touch-action: none;");
+    el.setAttribute("style", "-ms-touch-action: none; touch-action: none;");
   }
 
   /**

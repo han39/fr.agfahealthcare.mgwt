@@ -1,5 +1,8 @@
 package com.googlecode.mgwt.ui.client.widget.panel.scroll.impl;
 
+import java.util.Iterator;
+import java.util.logging.Logger;
+
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
@@ -45,7 +48,6 @@ import com.googlecode.mgwt.dom.client.event.orientation.OrientationChangeEvent;
 import com.googlecode.mgwt.dom.client.event.orientation.OrientationChangeHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.TouchSupport;
 import com.googlecode.mgwt.ui.client.util.CssUtil;
 import com.googlecode.mgwt.ui.client.widget.panel.scroll.BeforeScrollEndEvent;
 import com.googlecode.mgwt.ui.client.widget.panel.scroll.BeforeScrollMoveEvent;
@@ -60,9 +62,7 @@ import com.googlecode.mgwt.ui.client.widget.panel.scroll.ScrollPanelAppearance.S
 import com.googlecode.mgwt.ui.client.widget.panel.scroll.ScrollRefreshEvent;
 import com.googlecode.mgwt.ui.client.widget.panel.scroll.ScrollStartEvent;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
-
-import java.util.Iterator;
-import java.util.logging.Logger;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchSupport;
 
 public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 
@@ -1585,7 +1585,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
     // clear old event handlers
     unbindStartEvent();
     unbindResizeEvent();
-    if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+    if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents() || TouchSupport.isTouchEventsEmulatedUsingPointerEvents()) {
       unbindMouseoutEvent();
       unbindMouseWheelEvent();
     }
@@ -1605,7 +1605,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
       if (isAttached()) {
         bindResizeEvent();
         bindStartEvent();
-        if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+        if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents() || TouchSupport.isTouchEventsEmulatedUsingPointerEvents()) {
           bindMouseoutEvent();
           bindMouseWheelEvent();
         }
@@ -1639,7 +1639,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
       // bind events
       bindResizeEvent();
       bindStartEvent();
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents() || TouchSupport.isTouchEventsEmulatedUsingPointerEvents()) {
         bindMouseoutEvent();
         bindMouseWheelEvent();
       }

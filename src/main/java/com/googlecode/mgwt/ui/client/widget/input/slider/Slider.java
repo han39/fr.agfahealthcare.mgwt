@@ -30,8 +30,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.ui.client.TouchSupport;
 import com.googlecode.mgwt.ui.client.util.CssUtil;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl;
 
@@ -42,40 +43,43 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl;
  */
 public class Slider extends Widget implements HasValue<Integer>, LeafValueEditor<Integer> {
 
+  private boolean active = false;
+  
   private class SliderTouchHandler implements TouchHandler {
 
     @Override
     public void onTouchStart(TouchStartEvent event) {
       setValueContrained(event.getTouches().get(0).getClientX());
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+      if (event instanceof SimulatedTouchStartEvent) {
         DOM.setCapture(getElement());
       }
+      active = true;
       event.stopPropagation();
       event.preventDefault();
-    }
+    } 
 
     @Override
     public void onTouchMove(TouchMoveEvent event) {
-
-      setValueContrained(event.getTouches().get(0).getClientX());
-      event.stopPropagation();
-      event.preventDefault();
+      if (active) {
+        setValueContrained(event.getTouches().get(0).getClientX());
+        event.stopPropagation();
+        event.preventDefault();
+      }
     }
 
     @Override
     public void onTouchEnd(TouchEndEvent event) {
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+      if (event instanceof SimulatedTouchEndEvent) {
         DOM.releaseCapture(getElement());
       }
       event.stopPropagation();
       event.preventDefault();
+      active = false;
     }
 
     @Override
     public void onTouchCancel(TouchCancelEvent event) {
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
-        DOM.releaseCapture(getElement());
-      }
+      active = false;
     }
   }
 

@@ -239,6 +239,9 @@ public class ImageHolderDefaultXHighAppearance implements ImageHolderAppearance 
     @Source("resources/ic_action_map_xhdpi.png")
     ImageResource map();
 
+    @Source("resources/ic_action_menu_xhdpi.png")
+    ImageResource menu();
+
     @Source("resources/ic_action_merge_xhdpi.png")
     ImageResource merge();
 

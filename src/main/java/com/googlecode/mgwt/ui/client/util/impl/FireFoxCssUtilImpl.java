@@ -100,13 +100,13 @@ public class FireFoxCssUtilImpl implements CssUtilImpl {
   }-*/;
 
 	@Override
-	public native void setTransistionTimingFunction(Element element, String string) /*-{
+	public native void setTransistionTimingFunction(Element el, String string) /*-{
 		el.mozTransitionTimingFunction = string;
   }-*/;
 
 	@Override
 	public void setTranslateAndZoom(Element el, int x, int y, double scale) {
-		String cssText = null;
+		final String cssText;
 
 		cssText = "translate( " + x + "px, " + y + "px ) scale( + " + scale + ")";
 
