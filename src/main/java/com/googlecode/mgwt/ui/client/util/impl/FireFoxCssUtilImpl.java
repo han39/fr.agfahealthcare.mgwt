@@ -125,5 +125,4 @@ public class FireFoxCssUtilImpl implements CssUtilImpl {
 	 var y = matrix[5] * 1;
 	 return [ x, y ];
 	 }-*/;
-
 }
