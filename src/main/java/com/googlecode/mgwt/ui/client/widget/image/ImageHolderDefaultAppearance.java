@@ -239,6 +239,9 @@ public class ImageHolderDefaultAppearance implements ImageHolderAppearance {
     @Source("resources/ic_action_map_mdpi.png")
     ImageResource map();
 
+    @Source("resources/ic_action_menu_mdpi.png")
+    ImageResource menu();
+
     @Source("resources/ic_action_merge_mdpi.png")
     ImageResource merge();
 

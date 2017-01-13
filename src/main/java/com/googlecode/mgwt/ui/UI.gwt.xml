@@ -61,21 +61,21 @@ under * the License.
     <when-type-assignable class="com.googlecode.mgwt.ui.client.FormFactor" />
   </generate-with>
 
-  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetStandardImpl">
+  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetMouseAndTouchImpl">
     <when-type-is class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl" />
   </replace-with>
 
-  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetTouchImpl">
+  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetTouchOnlyImpl">
     <when-type-is class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl" />
     <all>
-      <when-property-is name="mgwt.user.agent" value="mobile" />
+      <when-property-is name="mgwt.formfactor" value="phone" />
     </all>
   </replace-with>
 
   <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetPointerImpl">
     <when-type-is class="com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl" />
-    <all>
-      <when-property-is name="user.agent" value="ie10" />
+    <all> 
+      <when-property-is name="mgwt.pointermodel" value="pointer" />
     </all>
   </replace-with>
 	
@@ -116,21 +116,21 @@ under * the License.
     </any>
   </replace-with>
 
-  <replace-with class="com.googlecode.mgwt.ui.client.TouchSupport.TouchSupportStandard">
-    <when-type-is class="com.googlecode.mgwt.ui.client.TouchSupport" />
+  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchSupport.TouchSupportMouseAndTouch">
+    <when-type-is class="com.googlecode.mgwt.ui.client.widget.touch.TouchSupport" />
   </replace-with>
 
-  <replace-with class="com.googlecode.mgwt.ui.client.TouchSupport.TouchSupportNative">
-    <when-type-is class="com.googlecode.mgwt.ui.client.TouchSupport" />
+  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchSupport.TouchSupportTouchOnly">
+    <when-type-is class="com.googlecode.mgwt.ui.client.widget.touch.TouchSupport" />
     <all>
-      <when-property-is name="mgwt.user.agent" value="mobile"/>
+      <when-property-is name="mgwt.formfactor" value="phone"/>
     </all>
   </replace-with>
 
-  <replace-with class="com.googlecode.mgwt.ui.client.TouchSupport.TouchSupportEmulatedPointer">
-    <when-type-is class="com.googlecode.mgwt.ui.client.TouchSupport" />
+  <replace-with class="com.googlecode.mgwt.ui.client.widget.touch.TouchSupport.TouchSupportEmulatedPointer">
+    <when-type-is class="com.googlecode.mgwt.ui.client.widget.touch.TouchSupport" />
     <all> 
-      <when-property-is name="user.agent" value="ie10" />
+      <when-property-is name="mgwt.pointermodel" value="pointer" />
     </all>
   </replace-with>
 

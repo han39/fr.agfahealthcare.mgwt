@@ -30,6 +30,9 @@ import com.googlecode.mgwt.dom.client.event.pointer.TouchMoveToMsPointerMoveHand
 import com.googlecode.mgwt.dom.client.event.pointer.TouchStartToMsPointerDownHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 
+/**
+ * Supports pointer model only 
+ */
 public class TouchWidgetPointerImpl implements TouchWidgetImpl
 {
   @Override

@@ -15,7 +15,7 @@ public class WebkitCssUtilImpl implements CssUtilImpl {
 
   @Override
   public void translate(Element el, int x, int y) {
-    String cssText = null;
+    final String cssText;
     if (has3d() && !MGWT.getOsDetection().isDesktop()) {
       cssText = "translate3d(" + x + "px, " + y + "px, 0px)";
     } else {
@@ -125,13 +125,13 @@ public class WebkitCssUtilImpl implements CssUtilImpl {
   }-*/;
 
   @Override
-  public native void setTransistionTimingFunction(Element element, String string) /*-{
+  public native void setTransistionTimingFunction(Element el, String string) /*-{
 		el.webkitTransitionTimingFunction = string;
   }-*/;
 
   @Override
   public void setTranslateAndZoom(Element el, int x, int y, double scale) {
-    String cssText = null;
+    final String cssText;
     if (MGWT.getOsDetection().isAndroid() || MGWT.getOsDetection().isDesktop()) {
       cssText = "translate( " + x + "px, " + y + "px ) scale(" + scale + ")";
     } else {
@@ -143,7 +143,7 @@ public class WebkitCssUtilImpl implements CssUtilImpl {
 
   @Override
   public void translatePercent(Element el, double x, double y) {
-    String cssText = null;
+    final String cssText;
     if (has3d() && !MGWT.getOsDetection().isDesktop()) {
       cssText = "translate3d(" + x + "%, " + y + "%, 0px)";
     } else {

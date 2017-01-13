@@ -20,10 +20,11 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasText;
+import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.ui.client.TouchSupport;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchWidget;
 
 /**
@@ -76,9 +77,6 @@ public abstract class ButtonBase extends TouchWidget implements HasText {
           event.stopPropagation();
           event.preventDefault();
           removeStyleName(ButtonBase.this.baseAppearance.css().active());
-          if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
-            DOM.releaseCapture(getElement());
-          }
           active = false;
         }
 
@@ -87,7 +85,7 @@ public abstract class ButtonBase extends TouchWidget implements HasText {
           event.stopPropagation();
           event.preventDefault();
           removeStyleName(ButtonBase.this.baseAppearance.css().active());
-          if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+          if (event instanceof SimulatedTouchEndEvent) {
             DOM.releaseCapture(getElement());
           }
           active = false;
@@ -104,7 +102,7 @@ public abstract class ButtonBase extends TouchWidget implements HasText {
           event.stopPropagation();
           event.preventDefault();
           addStyleName(ButtonBase.this.baseAppearance.css().active());
-          if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+          if (event instanceof SimulatedTouchStartEvent) {
             DOM.setCapture(getElement());
           }
           active = true;

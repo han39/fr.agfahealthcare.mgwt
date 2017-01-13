@@ -13,14 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.googlecode.mgwt.ui.client.widget.input;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -28,13 +31,8 @@ import com.google.gwt.text.shared.Parser;
 import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ValueBoxBase;
-
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.widget.base.MValueBoxBase;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
 
 /**
  * A simple Date input widget. So far it uses &lt;input type="date" /> on iOS with a nice looking
@@ -48,10 +46,6 @@ import java.util.Date;
  * formated according to the locale of the device, while we get the date in the W3C Format.
  *
  * On other platforms you can set the format to fit what you like.
- *
- *
- *
- * @author Daniel Kurka
  *
  */
 public class MDateBox extends MValueBoxBase<Date> {
@@ -164,57 +158,22 @@ public class MDateBox extends MValueBoxBase<Date> {
 
     addStyleName(appearance.css().textBox());
 
-    // fix ios issue with onchange event
+    // try and set input type to date
+    setInputType("date");
 
-    if (MGWT.getOsDetection().isAndroid4_4_OrHigher()) {
-      // only set input type to date if there is a native picker
-      impl.setType(box.getElement(), "date");
-      // use w3c format
+    // use w3c format if type set to date
+    if (isInputTypeDate()) {
       format = W3C_FORMAT;
     }
-
-    if (MGWT.getOsDetection().isRetina()) {
-      // IOS needs a workaround for empty date picker
-      // Since it will not render them properly (iOS7)
-      format = W3C_FORMAT;
-      box.addFocusHandler(new FocusHandler() {
-
-        @Override
-        public void onFocus(FocusEvent event) {
-          impl.setType(box.getElement(), "date");
-        }
-      });
-
-      box.addBlurHandler(new BlurHandler() {
-
-        @Override
-        public void onBlur(BlurEvent event) {
-          impl.setType(box.getElement(), "text");
-        }
-      });
-    }
-
-    if (MGWT.getOsDetection().isIPadRetina() || MGWT.getOsDetection().isIPad()) {
-      // for iPad workaround does not work
-      // adding default date, not happy about this
-      impl.setType(box.getElement(), "date");
-      format = W3C_FORMAT;
-
-      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-        @Override
-        public void execute() {
-           box.setValue(new Date());
-        }
-      });
-    }
-
 
     // apply format to parsers
     getBox().getDateParser().setFormat(format);
     getBox().getDateRenderer().setFormat(format);
 
     if (MGWT.getOsDetection().isIOs()) {
+      impl.setType(box.getElement(), "date");
+      box.setHeight("20px");
+
       addBlurHandler(new BlurHandler() {
 
         @Override
@@ -226,15 +185,32 @@ public class MDateBox extends MValueBoxBase<Date> {
               Date value = box.getValue();
               ValueChangeEvent.fireIfNotEqual(box, lastValue, value);
               lastValue = value;
-
             }
           });
-
         }
       });
       lastValue = null;
     }
 
+  }
+
+  /**
+   *
+   * @param type
+   */
+  private void setInputType(String type) {
+    try {
+      impl.setType(box.getElement(), type);
+    } catch (Exception e) {
+    }
+  }
+
+  /**
+   *
+   * @return
+   */
+  private boolean isInputTypeDate() {
+    return box.getElement().getAttribute("type").equalsIgnoreCase("date");
   }
 
   /**
@@ -254,7 +230,6 @@ public class MDateBox extends MValueBoxBase<Date> {
 
     getBox().getDateParser().setFormat(format);
     getBox().getDateRenderer().setFormat(format);
-
   }
 
   protected DateValueBoxBase getBox() {

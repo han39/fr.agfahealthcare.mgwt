@@ -26,7 +26,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.mouse.HandlerRegistrationCollection;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 
-public class TouchWidgetTouchImpl implements TouchWidgetImpl
+/**
+ * Supports Touch only (does not support mouse) i.e. mostly phones 
+ */
+public class TouchWidgetTouchOnlyImpl implements TouchWidgetImpl
 {
   @Override
   public HandlerRegistration addTouchStartHandler(Widget w, TouchStartHandler handler) {
@@ -44,7 +47,7 @@ public class TouchWidgetTouchImpl implements TouchWidgetImpl
   }
 
   @Override
-  public HandlerRegistration addTouchEndHandler(Widget w, TouchEndHandler handler) {
+  public HandlerRegistration addTouchEndHandler(Widget w, final TouchEndHandler handler) {
     return w.addDomHandler(handler, TouchEndEvent.getType());
   }
 

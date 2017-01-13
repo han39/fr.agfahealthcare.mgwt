@@ -43,7 +43,7 @@ public class LongTapRecognizer implements TouchHandler {
 
   protected enum State {
     INVALID, READY, FINGERS_DOWN, FINGERS_UP, WAITING
-  };
+  }
 
   protected State state;
   private final HasHandlers source;
@@ -231,6 +231,7 @@ public class LongTapRecognizer implements TouchHandler {
   protected void reset() {
     state = State.READY;
     touchCount = 0;
+    startPositions = CollectionFactory.constructArray();
   }
 
   // Visible for testing

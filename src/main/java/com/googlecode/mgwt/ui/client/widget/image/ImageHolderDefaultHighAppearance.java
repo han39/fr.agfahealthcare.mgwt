@@ -239,6 +239,9 @@ public class ImageHolderDefaultHighAppearance implements ImageHolderAppearance {
     @Source("resources/ic_action_map_hdpi.png")
     ImageResource map();
 
+    @Source("resources/ic_action_menu_hdpi.png")
+    ImageResource menu();
+
     @Source("resources/ic_action_merge_hdpi.png")
     ImageResource merge();
 

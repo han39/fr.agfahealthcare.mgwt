@@ -165,6 +165,8 @@ public class ImageHolder {
 
       ImageResource map();
 
+      ImageResource menu();
+
       ImageResource merge();
 
       ImageResource mic();

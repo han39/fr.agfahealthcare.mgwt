@@ -31,8 +31,9 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasValue;
+import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.ui.client.TouchSupport;
 import com.googlecode.mgwt.ui.client.util.CssUtil;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchWidget;
 
@@ -50,29 +51,29 @@ public class MCheckBox extends TouchWidget implements HasValue<Boolean>, IsEdito
 	  private int offset;
 		private boolean moved;
 		private int now_x;
-
+		private boolean active = false;
+		
 		@Override
 		public void onTouchCancel(TouchCancelEvent event) {
+      active = false;
 			if (isReadOnly()) {
 				return;
 			}
 			event.stopPropagation();
 			event.preventDefault();
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
-				DOM.releaseCapture(getElement());
-			}
 			setValue(getValue());
 		}
 
 		@Override
 		public void onTouchEnd(TouchEndEvent event) {
+      active = false;
 			if (isReadOnly()) {
 				return;
 			}
 
 			event.stopPropagation();
 			event.preventDefault();
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+      if (event instanceof SimulatedTouchEndEvent) {
 				DOM.releaseCapture(getElement());
 			}
 
@@ -85,7 +86,7 @@ public class MCheckBox extends TouchWidget implements HasValue<Boolean>, IsEdito
 
 		@Override
 		public void onTouchMove(TouchMoveEvent event) {
-			if (isReadOnly()) {
+			if (!active || isReadOnly()) {
 				return;
 			}
 			event.stopPropagation();
@@ -117,9 +118,10 @@ public class MCheckBox extends TouchWidget implements HasValue<Boolean>, IsEdito
 			if (isReadOnly()) {
 				return;
 			}
+			active = true;
 			event.stopPropagation();
 			event.preventDefault();
-      if (TouchSupport.isTouchEventsEmulatedUsingMouseEvents()) {
+      if (event instanceof SimulatedTouchStartEvent) {
 				DOM.setCapture(getElement());
 			}
 
