@@ -196,6 +196,9 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 
 	}
 
+	private static final String PARENT = "parentScrollPanel";
+	private static final String FLEX_WRAPPER = "flexScrollPanel";
+
 	// TODO fix this by refactoring
 	private static final ScrollPanelAppearance SPA = GWT.create(ScrollPanelAppearance.class);
 
@@ -331,6 +334,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 	private boolean listenForMoveEvent;
 
 	private int offsetMaxY;
+	private boolean once = true;
 
 	public ScrollPanelTouchImpl() {
 
@@ -871,6 +875,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 					@Override
 					public void execute() {
 						refresh();
+
 					}
 				});
 
@@ -953,9 +958,19 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 	}
 
 	@Override
-	protected void onDetach() {
-		super.onDetach();
+	protected void onLoad() {
+		if (once) {
+			once = false;
+			// Le parent n'est pas forcément un widget
+			getElement().getParentElement().addClassName(PARENT);
+			addStyleName(FLEX_WRAPPER);
+		}
+	}
+
+	@Override
+	protected void onUnload() {
 		unbindResizeEvent();
+		stop();
 	}
 
 	private void bindCancelEvent() {
@@ -1213,14 +1228,14 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 																		}-*/;
 
 	private native int getMarginHeight(Element el)/*-{
-
+																	
 																	var top = 0;
 																	var bottom = 0;
 																	var style = $wnd.getComputedStyle(el);
-
+																	
 																	top = parseInt(style.marginTop, 10) || 0;
 																	bottom = parseInt(style.marginBottom, 10) || 0;
-
+																	
 																	return top + bottom;
 																	}-*/;
 
@@ -1228,10 +1243,10 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 																var left = 0;
 																var right = 0;
 																var style = $wnd.getComputedStyle(el);
-
+																
 																left = parseInt(style.marginLeft, 10) || 0;
 																right = parseInt(style.marginRight, 10) || 0;
-
+																
 																return left + right;
 																}-*/;
 
@@ -1240,7 +1255,7 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 																					}-*/;
 
 	private native int getMouseWheelVelocityY(NativeEvent evt)/*-{
-
+																					
 																					var val = (evt.detail * 40) || evt.wheelDeltaY || 0;
 																					return Math.round(val);
 																					}-*/;

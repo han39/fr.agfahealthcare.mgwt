@@ -30,67 +30,62 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.ui.client.util.NoopHandlerRegistration;
 
 /**
- * Supports mouse but also supports Touch simultaneously if touch possibly supported 
+ * Supports mouse but also supports Touch simultaneously if touch possibly supported
  */
-public class TouchWidgetMouseAndTouchImpl implements TouchWidgetImpl
-{
-  private static final TouchWidgetImpl delegate = new TouchWidgetTouchOnlyImpl();
+public class TouchWidgetMouseAndTouchImpl implements TouchWidgetImpl {
+	private static final TouchWidgetImpl delegate = new TouchWidgetTouchOnlyImpl();
 
-  @Override
-  public HandlerRegistration addTouchStartHandler(Widget w, TouchStartHandler handler) {
-    if (TouchSupport.isTouchEventsSupported()) {
-      HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
-      handlerRegistrations.addHandlerRegistration(delegate.addTouchStartHandler(w, handler));
-      handlerRegistrations.addHandlerRegistration(w.addDomHandler(new TouchStartToMouseDownHandler(handler), MouseDownEvent.getType()));
-      return handlerRegistrations;
-    }
-    else {
-      return w.addDomHandler(new TouchStartToMouseDownHandler(handler), MouseDownEvent.getType());
-    }
-  }
+	@Override
+	public HandlerRegistration addTouchCancelHandler(Widget w, TouchCancelHandler handler) {
+		if (TouchSupport.isTouchEventsSupported()) {
+			return delegate.addTouchCancelHandler(w, handler);
+		}
+		return new NoopHandlerRegistration();
+	}
 
-  @Override
-  public HandlerRegistration addTouchMoveHandler(Widget w, TouchMoveHandler handler) {
-    HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
-    if (TouchSupport.isTouchEventsSupported()) {
-      handlerRegistrations.addHandlerRegistration(delegate.addTouchMoveHandler(w, handler));
-    }
-    TouchMoveToMouseMoveHandler touchMoveToMouseMoveHandler = new TouchMoveToMouseMoveHandler(handler);
-    handlerRegistrations.addHandlerRegistration(w.addDomHandler(touchMoveToMouseMoveHandler, MouseDownEvent.getType()));
-    handlerRegistrations.addHandlerRegistration(w.addDomHandler(touchMoveToMouseMoveHandler, MouseUpEvent.getType()));
-    handlerRegistrations.addHandlerRegistration(w.addDomHandler(touchMoveToMouseMoveHandler, MouseMoveEvent.getType()));
-    return handlerRegistrations;
-  }
+	@Override
+	public HandlerRegistration addTouchEndHandler(Widget w, TouchEndHandler handler) {
+		if (TouchSupport.isTouchEventsSupported()) {
+			HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
+			handlerRegistrations.addHandlerRegistration(delegate.addTouchEndHandler(w, handler));
+			return handlerRegistrations;
+		} else {
+			return w.addDomHandler(new TouchEndToMouseUpHandler(handler), MouseUpEvent.getType());
+		}
+	}
 
-  @Override
-  public HandlerRegistration addTouchCancelHandler(Widget w, TouchCancelHandler handler) {
-    if (TouchSupport.isTouchEventsSupported()) {
-      return delegate.addTouchCancelHandler(w, handler);
-    }
-    return new NoopHandlerRegistration();
-  }
+	@Override
+	public HandlerRegistration addTouchHandler(Widget w, TouchHandler handler) {
+		HandlerRegistrationCollection hrc = new HandlerRegistrationCollection();
+		hrc.addHandlerRegistration(addTouchStartHandler(w, handler));
+		hrc.addHandlerRegistration(addTouchMoveHandler(w, handler));
+		hrc.addHandlerRegistration(addTouchEndHandler(w, handler));
+		hrc.addHandlerRegistration(addTouchCancelHandler(w, handler));
+		return hrc;
+	}
 
-  @Override
-  public HandlerRegistration addTouchEndHandler(Widget w, TouchEndHandler handler) {
-    if (TouchSupport.isTouchEventsSupported()) {
-      HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
-      handlerRegistrations.addHandlerRegistration(delegate.addTouchEndHandler(w, handler));
-      handlerRegistrations.addHandlerRegistration(w.addDomHandler(new TouchEndToMouseUpHandler(handler), MouseUpEvent.getType()));
-      return handlerRegistrations;
-    }
-    else {
-      return w.addDomHandler(new TouchEndToMouseUpHandler(handler), MouseUpEvent.getType());
-    }
-  }
+	@Override
+	public HandlerRegistration addTouchMoveHandler(Widget w, TouchMoveHandler handler) {
+		HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
+		if (TouchSupport.isTouchEventsSupported()) {
+			handlerRegistrations.addHandlerRegistration(delegate.addTouchMoveHandler(w, handler));
+		}
+		TouchMoveToMouseMoveHandler touchMoveToMouseMoveHandler = new TouchMoveToMouseMoveHandler(handler);
+		handlerRegistrations.addHandlerRegistration(w.addDomHandler(touchMoveToMouseMoveHandler, MouseDownEvent.getType()));
+		handlerRegistrations.addHandlerRegistration(w.addDomHandler(touchMoveToMouseMoveHandler, MouseUpEvent.getType()));
+		handlerRegistrations.addHandlerRegistration(w.addDomHandler(touchMoveToMouseMoveHandler, MouseMoveEvent.getType()));
+		return handlerRegistrations;
+	}
 
-  @Override
-  public HandlerRegistration addTouchHandler(Widget w, TouchHandler handler) {
-    HandlerRegistrationCollection hrc = new HandlerRegistrationCollection();
-    hrc.addHandlerRegistration(addTouchStartHandler(w, handler));
-    hrc.addHandlerRegistration(addTouchMoveHandler(w, handler));
-    hrc.addHandlerRegistration(addTouchEndHandler(w, handler));
-    hrc.addHandlerRegistration(addTouchCancelHandler(w, handler));
-    return hrc;
-  }
+	@Override
+	public HandlerRegistration addTouchStartHandler(Widget w, TouchStartHandler handler) {
+		if (TouchSupport.isTouchEventsSupported()) {
+			HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
+			handlerRegistrations.addHandlerRegistration(delegate.addTouchStartHandler(w, handler));
+			return handlerRegistrations;
+		} else {
+			return w.addDomHandler(new TouchStartToMouseDownHandler(handler), MouseDownEvent.getType());
+		}
+	}
 
 }
