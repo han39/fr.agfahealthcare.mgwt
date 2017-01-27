@@ -48,6 +48,7 @@ public class TouchWidgetMouseAndTouchImpl implements TouchWidgetImpl {
 		if (TouchSupport.isTouchEventsSupported()) {
 			HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
 			handlerRegistrations.addHandlerRegistration(delegate.addTouchEndHandler(w, handler));
+			handlerRegistrations.addHandlerRegistration(w.addDomHandler(new TouchEndToMouseUpHandler(handler), MouseUpEvent.getType()));
 			return handlerRegistrations;
 		} else {
 			return w.addDomHandler(new TouchEndToMouseUpHandler(handler), MouseUpEvent.getType());
@@ -82,6 +83,7 @@ public class TouchWidgetMouseAndTouchImpl implements TouchWidgetImpl {
 		if (TouchSupport.isTouchEventsSupported()) {
 			HandlerRegistrationCollection handlerRegistrations = new HandlerRegistrationCollection();
 			handlerRegistrations.addHandlerRegistration(delegate.addTouchStartHandler(w, handler));
+			handlerRegistrations.addHandlerRegistration(w.addDomHandler(new TouchStartToMouseDownHandler(handler), MouseDownEvent.getType()));
 			return handlerRegistrations;
 		} else {
 			return w.addDomHandler(new TouchStartToMouseDownHandler(handler), MouseDownEvent.getType());
