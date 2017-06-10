@@ -1509,12 +1509,12 @@ public class ScrollPanelTouchImpl extends ScrollPanelImpl {
 				fireEvent(new ScrollEndEvent());
 			}
 
-			if (scrollBar[DIRECTION.HORIZONTAL.ordinal()] && hideScrollBar) {
+			if (scrollBar[DIRECTION.HORIZONTAL.ordinal()] && hideScrollBar && scrollBarWrapper[DIRECTION.HORIZONTAL.ordinal()] != null) {
 				CssUtil.setTransitionsDelay(scrollBarWrapper[DIRECTION.HORIZONTAL.ordinal()], 300);
 				CssUtil.setOpacity(scrollBarWrapper[DIRECTION.HORIZONTAL.ordinal()], 0);
 			}
 
-			if (scrollBar[DIRECTION.VERTICAL.ordinal()] && hideScrollBar) {
+			if (scrollBar[DIRECTION.VERTICAL.ordinal()] && hideScrollBar && scrollBarWrapper[DIRECTION.VERTICAL.ordinal()] != null) {
 				CssUtil.setTransitionsDelay(scrollBarWrapper[DIRECTION.VERTICAL.ordinal()], 300);
 				CssUtil.setOpacity(scrollBarWrapper[DIRECTION.VERTICAL.ordinal()], 0);
 			}
