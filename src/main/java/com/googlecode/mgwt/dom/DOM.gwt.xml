@@ -75,6 +75,11 @@
 	    }
       }
       
+      // Manage as tablet, Surface and other touch screen
+      if ('ontouchstart' in window || navigator.maxTouchPoints) {
+        return "tablet"; 
+      }
+      
       // Everything else is a desktop.
       return "desktop";
     ]]></property-provider>
