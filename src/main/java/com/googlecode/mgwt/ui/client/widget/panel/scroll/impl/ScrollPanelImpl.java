@@ -38,47 +38,47 @@ import com.googlecode.mgwt.ui.client.widget.panel.scroll.ScrollTouchEndEvent;
  */
 public abstract class ScrollPanelImpl extends Composite implements HasWidgets {
 
-	public HandlerRegistration addBeforeScrollEndHandler(BeforeScrollEndEvent.Handler handler) {
+	public HandlerRegistration addBeforeScrollEndHandler(final BeforeScrollEndEvent.Handler handler) {
 		return addHandler(handler, BeforeScrollEndEvent.getTYPE());
 	}
 
-	public HandlerRegistration addBeforeScrollMoveHandler(BeforeScrollMoveEvent.Handler handler) {
+	public HandlerRegistration addBeforeScrollMoveHandler(final BeforeScrollMoveEvent.Handler handler) {
 		return addHandler(handler, BeforeScrollMoveEvent.getTYPE());
 	}
 
-	public HandlerRegistration addBeforeScrollStartHandler(BeforeScrollStartEvent.Handler handler) {
+	public HandlerRegistration addBeforeScrollStartHandler(final BeforeScrollStartEvent.Handler handler) {
 		return addHandler(handler, BeforeScrollStartEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollAnimationEndHandler(ScrollAnimationEndEvent.Handler handler) {
+	public HandlerRegistration addScrollAnimationEndHandler(final ScrollAnimationEndEvent.Handler handler) {
 		return addHandler(handler, ScrollAnimationEndEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollAnimationMoveHandler(ScrollAnimationMoveEvent.Handler handler) {
+	public HandlerRegistration addScrollAnimationMoveHandler(final ScrollAnimationMoveEvent.Handler handler) {
 		return addHandler(handler, ScrollAnimationMoveEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollAnimationStartHandler(Handler handler) {
+	public HandlerRegistration addScrollAnimationStartHandler(final Handler handler) {
 		return addHandler(handler, ScrollAnimationStartEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollEndHandler(ScrollEndEvent.Handler handler) {
+	public HandlerRegistration addScrollEndHandler(final ScrollEndEvent.Handler handler) {
 		return addHandler(handler, ScrollEndEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollMoveHandler(ScrollMoveEvent.Handler handler) {
+	public HandlerRegistration addScrollMoveHandler(final ScrollMoveEvent.Handler handler) {
 		return addHandler(handler, ScrollMoveEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollRefreshHandler(ScrollRefreshEvent.Handler handler) {
+	public HandlerRegistration addScrollRefreshHandler(final ScrollRefreshEvent.Handler handler) {
 		return addHandler(handler, ScrollRefreshEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollStartHandler(ScrollStartEvent.Handler handler) {
+	public HandlerRegistration addScrollStartHandler(final ScrollStartEvent.Handler handler) {
 		return addHandler(handler, ScrollStartEvent.getTYPE());
 	}
 
-	public HandlerRegistration addScrollTouchEndHandler(ScrollTouchEndEvent.Handler handler) {
+	public HandlerRegistration addScrollTouchEndHandler(final ScrollTouchEndEvent.Handler handler) {
 		return addHandler(handler, ScrollTouchEndEvent.getTYPE());
 	}
 
@@ -174,10 +174,6 @@ public abstract class ScrollPanelImpl extends Composite implements HasWidgets {
 	public abstract void setScrollLock(boolean lock);
 
 	public abstract void setShowHorizontalScrollBar(boolean show);
-
-	public abstract void setShowScrollBarX(boolean show);
-
-	public abstract void setShowScrollBarY(boolean show);
 
 	public abstract void setShowVerticalScrollBar(boolean show);
 

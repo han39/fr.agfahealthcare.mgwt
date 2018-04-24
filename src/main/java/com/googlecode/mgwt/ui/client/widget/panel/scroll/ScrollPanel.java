@@ -44,53 +44,53 @@ public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 	 * Methods only exists to make scroll panel work with UiBinder @use {@link #setWidget(IsWidget)}
 	 */
 	@Override
-	public void add(Widget w) {
+	public void add(final Widget w) {
 		impl.add(w);
 
 	}
 
-	public HandlerRegistration addBeforeScrollEndHandler(BeforeScrollEndEvent.Handler handler) {
+	public HandlerRegistration addBeforeScrollEndHandler(final BeforeScrollEndEvent.Handler handler) {
 		return impl.addBeforeScrollEndHandler(handler);
 	}
 
-	public HandlerRegistration addBeforeScrollMoveHandler(BeforeScrollMoveEvent.Handler handler) {
+	public HandlerRegistration addBeforeScrollMoveHandler(final BeforeScrollMoveEvent.Handler handler) {
 		return impl.addBeforeScrollMoveHandler(handler);
 	}
 
-	public HandlerRegistration addBeforeScrollStartHandler(BeforeScrollStartEvent.Handler handler) {
+	public HandlerRegistration addBeforeScrollStartHandler(final BeforeScrollStartEvent.Handler handler) {
 		return impl.addBeforeScrollStartHandler(handler);
 	}
 
-	public HandlerRegistration addScrollAnimationEndHandler(ScrollAnimationEndEvent.Handler handler) {
+	public HandlerRegistration addScrollAnimationEndHandler(final ScrollAnimationEndEvent.Handler handler) {
 		return impl.addScrollAnimationEndHandler(handler);
 	}
 
-	public HandlerRegistration addScrollAnimationMoveHandler(ScrollAnimationMoveEvent.Handler handler) {
+	public HandlerRegistration addScrollAnimationMoveHandler(final ScrollAnimationMoveEvent.Handler handler) {
 		return impl.addScrollAnimationMoveHandler(handler);
 	}
 
 	public HandlerRegistration addScrollAnimationStartHandler(
-			ScrollAnimationStartEvent.Handler handler) {
+			final ScrollAnimationStartEvent.Handler handler) {
 		return impl.addScrollAnimationStartHandler(handler);
 	}
 
-	public HandlerRegistration addScrollEndHandler(ScrollEndEvent.Handler handler) {
+	public HandlerRegistration addScrollEndHandler(final ScrollEndEvent.Handler handler) {
 		return impl.addScrollEndHandler(handler);
 	}
 
-	public HandlerRegistration addScrollMoveHandler(ScrollMoveEvent.Handler handler) {
+	public HandlerRegistration addScrollMoveHandler(final ScrollMoveEvent.Handler handler) {
 		return impl.addScrollMoveHandler(handler);
 	}
 
-	public HandlerRegistration addScrollRefreshHandler(ScrollRefreshEvent.Handler handler) {
+	public HandlerRegistration addScrollRefreshHandler(final ScrollRefreshEvent.Handler handler) {
 		return impl.addScrollRefreshHandler(handler);
 	}
 
-	public HandlerRegistration addScrollStartHandler(ScrollStartEvent.Handler handler) {
+	public HandlerRegistration addScrollStartHandler(final ScrollStartEvent.Handler handler) {
 		return impl.addScrollStartHandler(handler);
 	}
 
-	public HandlerRegistration addScrollTouchEndHandler(ScrollTouchEndEvent.Handler handler) {
+	public HandlerRegistration addScrollTouchEndHandler(final ScrollTouchEndEvent.Handler handler) {
 		return impl.addScrollTouchEndHandler(handler);
 	}
 
@@ -144,8 +144,7 @@ public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 	/**
 	 * Refresh the scroll panel
 	 *
-	 * This method needs to be called if the content of the child widget has changed without calling
-	 * {@link #setWidget(IsWidget)}
+	 * This method needs to be called if the content of the child widget has changed without calling {@link #setWidget(IsWidget)}
 	 *
 	 * ScrollPanel needs to recalculate sizes.
 	 */
@@ -155,60 +154,60 @@ public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 	}
 
 	@Override
-	public boolean remove(Widget w) {
+	public boolean remove(final Widget w) {
 		return impl.remove(w);
 	}
 
-	public void scrollTo(int x, int y) {
+	public void scrollTo(final int x, final int y) {
 		impl.scrollTo(x, y, 1);
 	}
 
-	public void scrollTo(int x, int y, int time, boolean relative) {
+	public void scrollTo(final int x, final int y, final int time, final boolean relative) {
 		impl.scrollTo(x, y, time, relative);
 	}
 
-	public void scrollToPage(int pageX, int pageY, int time) {
+	public void scrollToPage(final int pageX, final int pageY, final int time) {
 		impl.scrollToPage(pageX, pageY, time);
 	}
 
-	public void scrollToPage(int pageX, int pageY, int time, boolean issueEvent) {
+	public void scrollToPage(final int pageX, final int pageY, final int time, final boolean issueEvent) {
 		impl.scrollToPage(pageX, pageY, time, issueEvent);
 	}
 
-	public void setAutoHandleResize(boolean handle) {
+	public void setAutoHandleResize(final boolean handle) {
 		impl.setAutoHandleResize(handle);
 	}
 
-	public void setBounce(boolean bounce) {
+	public void setBounce(final boolean bounce) {
 		impl.setBounce(bounce);
 	}
 
-	public void setBounceFactor(double bounceFactor) {
+	public void setBounceFactor(final double bounceFactor) {
 		impl.setBounceFactor(bounceFactor);
 	}
 
-	public void setHideScrollBar(boolean hideScrollBar) {
+	public void setHideScrollBar(final boolean hideScrollBar) {
 		impl.setHideScrollBar(hideScrollBar);
 	}
 
-	public void setMaxScrollY(int y) {
+	public void setMaxScrollY(final int y) {
 		impl.setMaxScrollY(y);
 	}
 
-	public void setMinScrollY(int y) {
+	public void setMinScrollY(final int y) {
 		impl.setMinScrollY(y);
 	}
 
-	public void setMomentum(boolean momentum) {
+	public void setMomentum(final boolean momentum) {
 		impl.setMomentum(momentum);
 	}
 
-	public void setOffSetMaxY(int height) {
+	public void setOffSetMaxY(final int height) {
 		impl.setOffSetMaxY(height);
 
 	}
 
-	public void setOffSetY(int y) {
+	public void setOffSetY(final int y) {
 		impl.setOffSetY(y);
 	}
 
@@ -218,7 +217,7 @@ public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 	 * @param enabled
 	 *           true to enable
 	 */
-	public void setScrollingEnabledX(boolean enabled) {
+	public void setScrollingEnabledX(final boolean enabled) {
 		impl.setScrollingEnabledX(enabled);
 
 	}
@@ -229,48 +228,32 @@ public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 	 * @param enabled
 	 *           true to enable
 	 */
-	public void setScrollingEnabledY(boolean enabled) {
+	public void setScrollingEnabledY(final boolean enabled) {
 		impl.setScrollingEnabledY(enabled);
 
 	}
 
-	public void setScrollLock(boolean lock) {
+	public void setScrollLock(final boolean lock) {
 		impl.setScrollLock(lock);
 	}
 
-	public void setShowHorizontalScrollBar(boolean show) {
+	public void setShowHorizontalScrollBar(final boolean show) {
 		impl.setShowHorizontalScrollBar(show);
 	}
 
-	/**
-	 * @deprecated use {@link #setShowVerticalScrollBar(boolean)}
-	 */
-	@Deprecated
-	public void setShowScrollBarX(boolean b) {
-		impl.setShowScrollBarX(b);
-	}
-
-	/**
-	 * @deprecated use {@link #setShowHorizontalScrollBar(boolean)}
-	 */
-	@Deprecated
-	public void setShowScrollBarY(boolean b) {
-		impl.setShowScrollBarY(b);
-	}
-
-	public void setShowVerticalScrollBar(boolean show) {
+	public void setShowVerticalScrollBar(final boolean show) {
 		impl.setShowVerticalScrollBar(show);
 	}
 
-	public void setSnap(boolean snap) {
+	public void setSnap(final boolean snap) {
 		impl.setSnap(snap);
 	}
 
-	public void setSnapSelector(String selector) {
+	public void setSnapSelector(final String selector) {
 		impl.setSnapSelector(selector);
 	}
 
-	public void setSnapThreshold(int threshold) {
+	public void setSnapThreshold(final int threshold) {
 		impl.setSnapThreshold(threshold);
 	}
 
@@ -284,17 +267,17 @@ public class ScrollPanel extends Composite implements HasWidgets, IsFlexible {
 	 * @param android
 	 *           a boolean.
 	 */
-	public void setUsePos(boolean android) {
+	public void setUsePos(final boolean android) {
 		impl.setUsePos(android);
 
 	}
 
-	public void setWidget(IsWidget w) {
+	public void setWidget(final IsWidget w) {
 		impl.setWidget(w);
 	}
 
 	@Override
-	public void setWidget(Widget w) {
+	public void setWidget(final Widget w) {
 		impl.setWidget(w);
 	}
 }

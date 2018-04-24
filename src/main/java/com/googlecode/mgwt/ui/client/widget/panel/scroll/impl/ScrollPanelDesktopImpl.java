@@ -47,9 +47,6 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	private Widget scroller;
 	private SimplePanel wrapper;
 
-	private int wrapperHeight;
-	private int wrapperWidth;
-
 	private int maxScrollX;
 
 	private int minScrollY;
@@ -86,7 +83,7 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 		Event.sinkEvents(wrapper.getElement(), Event.ONSCROLL | Event.ONMOUSEWHEEL);
 		wrapper.addHandler(new ScrollHandler() {
 			@Override
-			public void onScroll(ScrollEvent event) {
+			public void onScroll(final ScrollEvent event) {
 				move();
 			}
 		}, ScrollEvent.getType());
@@ -95,9 +92,9 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 		if (Window.Navigator.getUserAgent().toLowerCase().contains("trident")) {
 			wrapper.addDomHandler(new MouseWheelHandler() {
 				@Override
-				public void onMouseWheel(MouseWheelEvent event) {
+				public void onMouseWheel(final MouseWheelEvent event) {
 					event.preventDefault();
-					int delta = getMouseWheelVelocityY(event.getNativeEvent());
+					final int delta = getMouseWheelVelocityY(event.getNativeEvent());
 					scrollTo(0, delta > 0 ? 100 : -100, 0, true);
 					move();
 				}
@@ -106,7 +103,7 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	}
 
 	@Override
-	public void add(Widget w) {
+	public void add(final Widget w) {
 		if (scroller != null) {
 			throw new IllegalStateException("scrollpanel can only have one child");
 		}
@@ -179,24 +176,24 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 			return;
 		}
 
-		wrapperHeight = getClientHeight(wrapper.getElement());
+		int wrapperHeight = getClientHeight(wrapper.getElement());
 		if (wrapperHeight == 0) {
 			wrapperHeight = 1;
 		}
-		wrapperWidth = getClientWidth(wrapper.getElement());
+		int wrapperWidth = getClientWidth(wrapper.getElement());
 		if (wrapperWidth == 0) {
 			wrapperWidth = 1;
 		}
 
 		minScrollY = 0;
 
-		int scrollerWidth = Math.round((scroller.getOffsetWidth() + getMarginWidth(scroller.getElement())));
-		int scrollerHeight = Math.round((scroller.getOffsetHeight() + minScrollY + getMarginHeight(scroller.getElement())));
+		final int scrollerWidth = scroller.getOffsetWidth() + getMarginWidth(scroller.getElement());
+		final int scrollerHeight = scroller.getOffsetHeight() + minScrollY + getMarginHeight(scroller.getElement());
 
 		maxScrollX = wrapperWidth - scrollerWidth;
 		maxScrollY = wrapperHeight - scrollerHeight + minScrollY;
 
-		hScroll = (hScrollDesired && maxScrollX < 0);
+		hScroll = hScrollDesired && maxScrollX < 0;
 		vScroll = vScrollDesired && (!hScroll || scrollerHeight > wrapperHeight);
 
 		resetPos(200);
@@ -206,7 +203,7 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	}
 
 	@Override
-	public boolean remove(Widget w) {
+	public boolean remove(final Widget w) {
 		if (w == scroller) {
 			scroller = null;
 			return wrapper.remove(w);
@@ -215,12 +212,12 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	}
 
 	@Override
-	public void scrollTo(int destX, int destY, int newDuration) {
+	public void scrollTo(final int destX, final int destY, final int newDuration) {
 		scrollTo(destX, destY, newDuration, false);
 	}
 
 	@Override
-	public void scrollTo(int x, int y, int time, boolean relative) {
+	public void scrollTo(final int x, final int y, final int time, final boolean relative) {
 		if (relative) {
 			this.x = this.x - x;
 			this.y = this.y - y;
@@ -233,132 +230,118 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	}
 
 	@Override
-	public void scrollToPage(int pageX, int pageY, int time) {
+	public void scrollToPage(final int pageX, final int pageY, final int time) {
 		// NO-OP
 
 	}
 
 	@Override
-	public void scrollToPage(int pageX, int pageY, int time, boolean issueEvent) {
+	public void scrollToPage(final int pageX, final int pageY, final int time, final boolean issueEvent) {
 		// NO-OP
 
 	}
 
 	@Override
-	public void setAutoHandleResize(boolean handle) {
+	public void setAutoHandleResize(final boolean handle) {
 		// NO-OP
 
 	}
 
 	@Override
-	public void setBounce(boolean bounce) {
+	public void setBounce(final boolean bounce) {
 		// NO-OP
 
 	}
 
 	@Override
-	public void setBounceFactor(double factor) {
+	public void setBounceFactor(final double factor) {
 		// NO-OP
 
 	}
 
 	@Override
-	public void setHideScrollBar(boolean hideScrollBar) {
+	public void setHideScrollBar(final boolean hideScrollBar) {
 		// NO-OP
 
 	}
 
 	@Override
-	public void setMaxScrollY(int y) {
+	public void setMaxScrollY(final int y) {
 		maxScrollY = y;
 	}
 
 	@Override
-	public void setMinScrollY(int y) {
+	public void setMinScrollY(final int y) {
 		minScrollY = y;
 	}
 
 	@Override
-	public void setMomentum(boolean momentum) {
+	public void setMomentum(final boolean momentum) {
 		// NO-OP
 	}
 
 	@Override
-	public void setOffSetMaxY(int height) {
+	public void setOffSetMaxY(final int height) {
 		// NO-OP
 	}
 
 	@Override
-	public void setOffSetY(int y) {
+	public void setOffSetY(final int y) {
 		// NO-OP
 	}
 
 	@Override
-	public void setScrollingEnabledX(boolean scrollingEnabledX) {
+	public void setScrollingEnabledX(final boolean scrollingEnabledX) {
 		hScrollDesired = scrollingEnabledX;
 	}
 
 	@Override
-	public void setScrollingEnabledY(boolean scrollingEnabledY) {
+	public void setScrollingEnabledY(final boolean scrollingEnabledY) {
 		vScrollDesired = scrollingEnabledY;
 	}
 
 	@Override
-	public void setScrollLock(boolean lock) {
+	public void setScrollLock(final boolean lock) {
 		// NO-OP
 	}
 
 	@Override
-	public void setShowHorizontalScrollBar(boolean show) {
-		// NO-OP
-
-	}
-
-	@Override
-	public void setShowScrollBarX(boolean show) {
-		// NO-OP
-
-	}
-
-	@Override
-	public void setShowScrollBarY(boolean show) {
-		// NO-OP
-
-	}
-
-	@Override
-	public void setShowVerticalScrollBar(boolean show) {
-		// NO-OP
-
-	}
-
-	@Override
-	public void setSnap(boolean snap) {
+	public void setShowHorizontalScrollBar(final boolean show) {
 		// NO-OP
 	}
 
 	@Override
-	public void setSnapSelector(String selector) {
+	public void setShowVerticalScrollBar(final boolean show) {
 		// NO-OP
 	}
 
 	@Override
-	public void setSnapThreshold(int threshold) {
+	public void setSnap(final boolean snap) {
 		// NO-OP
 	}
 
 	@Override
-	public void setUsePos(boolean pos) {
+	public void setSnapSelector(final String selector) {
 		// NO-OP
 	}
 
 	@Override
-	public void setWidget(IsWidget child) {
+	public void setSnapThreshold(final int threshold) {
+		// NO-OP
+	}
+
+	@Override
+	public void setUsePos(final boolean pos) {
+		// NO-OP
+	}
+
+	@Override
+	public void setWidget(final IsWidget child) {
 		setWidget(child.asWidget() != null ? child.asWidget() : null);
 	}
 
 	@Override
-	public void setWidget(Widget w) {
+	public void setWidget(final Widget w) {
 		if (scroller != null) {
 			// clean up
 			scroller.removeStyleName(css.container());
@@ -415,12 +398,12 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	var top = 0;
 	var bottom = 0;
 	var style = $wnd.getComputedStyle(el);
-	
-	
+
+
 	top = parseInt(style.marginTop, 10) || 0;
 	bottom = parseInt(style.marginBottom, 10) || 0;
-	
-	
+
+
 	return top + bottom;
 	}-*/;
 
@@ -429,12 +412,12 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 	var left = 0;
 	var right = 0;
 	var style = $wnd.getComputedStyle(el);
-	
-	
+
+
 	left = parseInt(style.marginLeft, 10) || 0;
 	right = parseInt(style.marginRight, 10) || 0;
-	
-	
+
+
 	return left + right;
 	}-*/;
 
@@ -446,9 +429,9 @@ public class ScrollPanelDesktopImpl extends ScrollPanelImpl {
 		fireEvent(new ScrollEndEvent());
 	}
 
-	private void resetPos(int time) {
-		int resetX = x < 0 ? 0 : x < maxScrollX ? maxScrollX : x;
-		int resetY = y < minScrollY || maxScrollY > 0 ? minScrollY : y < maxScrollY ? maxScrollY : y;
+	private void resetPos(final int time) {
+		final int resetX = x < 0 ? 0 : x < maxScrollX ? maxScrollX : x;
+		final int resetY = y < minScrollY || maxScrollY > 0 ? minScrollY : y < maxScrollY ? maxScrollY : y;
 		if (resetX == x && resetY == y) {
 			return;
 		}
