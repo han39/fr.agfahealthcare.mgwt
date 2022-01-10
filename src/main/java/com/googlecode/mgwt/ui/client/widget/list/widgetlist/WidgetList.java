@@ -13,6 +13,11 @@
  */
 package com.googlecode.mgwt.ui.client.widget.list.widgetlist;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -35,20 +40,12 @@ import com.googlecode.mgwt.dom.client.recognizer.TapRecognizer;
 import com.googlecode.mgwt.ui.client.widget.list.celllist.CellList;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * A list that can contain widgets
  *
- * This class renders widgets into a list. The same thing is done by {@link CellList} much more
- * efficient.
+ * This class renders widgets into a list. The same thing is done by {@link CellList} much more efficient.
  *
- * <b>Note:</b> Normally you should be using {@link CellList}. Only if you really need Widgets
- * inside the list (which won't be the case most of the time) you should be using WidgetList.
+ * <b>Note:</b> Normally you should be using {@link CellList}. Only if you really need Widgets inside the list (which won't be the case most of the time) you should be using WidgetList.
  *
  * The reference for styling can be found in CellList as well.
  *
@@ -57,187 +54,185 @@ import java.util.Map;
  */
 public class WidgetList extends Composite implements HasWidgets, HasSelectionHandlers<Integer> {
 
-  public static class WidgetListEntry extends Composite implements AcceptsOneWidget, HasTapHandlers {
+	public static class WidgetListEntry extends Composite implements AcceptsOneWidget, HasTapHandlers {
 
-    private static final TouchWidgetImpl IMPL = GWT.create(TouchWidgetImpl.class);
+		private static final TouchWidgetImpl IMPL = GWT.create(TouchWidgetImpl.class);
 
-    @UiField
-    public Panel container;
-    // UiBinder needs this field
-    private WidgetListAppearance appearance;
+		@UiField
+		public Panel container;
+		// UiBinder needs this field
+		private WidgetListAppearance appearance;
 
-    public WidgetListEntry(WidgetListAppearance appearance) {
-      this.appearance = appearance;
-      initWidget(this.appearance.uiBinderEntry().createAndBindUi(this));
-      IMPL.addTouchHandler(container, new TapRecognizer(this));
-    }
+		public WidgetListEntry(final WidgetListAppearance appearance) {
+			this.appearance = appearance;
+			initWidget(this.appearance.uiBinderEntry().createAndBindUi(this));
+			IMPL.addTouchHandler(container, new TapRecognizer(this));
+		}
 
-    @Override
-    public void setWidget(IsWidget w) {
-      container.add(w);
-    }
+		@Override
+		public HandlerRegistration addTapHandler(final TapHandler handler) {
+			return addHandler(handler, TapEvent.getType());
+		}
 
-    @Override
-    public HandlerRegistration addTapHandler(TapHandler handler) {
-      return addHandler(handler, TapEvent.getType());
-    }
+		@UiFactory
+		public WidgetListAppearance getAppearance() {
+			return appearance;
+		}
 
-    @UiFactory
-    public WidgetListAppearance getAppearance() {
-      return appearance;
-    }
-  }
+		@Override
+		public void setWidget(final IsWidget w) {
+			container.add(w);
+		}
+	}
 
-  private static class Entry {
-    WidgetListEntry entry;
-    HandlerRegistration handlerRegistration;
+	private static class Entry {
+		WidgetListEntry entry;
+		HandlerRegistration handlerRegistration;
 
-    public Entry(WidgetListEntry entry, HandlerRegistration handlerRegistration) {
-      this.entry = entry;
-      this.handlerRegistration = handlerRegistration;
-    }
-  }
+		public Entry(final WidgetListEntry entry, final HandlerRegistration handlerRegistration) {
+			this.entry = entry;
+			this.handlerRegistration = handlerRegistration;
+		}
+	}
 
+	private static final WidgetListAppearance DEFAULT_APPEARANCE = GWT.create(WidgetListAppearance.class);
 
-  private static final WidgetListAppearance DEFAULT_APPEARANCE = GWT.create(WidgetListAppearance.class);
+	private int childCount;
+	private List<WidgetListEntry> children = new ArrayList<>();
 
-  private int childCount;
-  private List<WidgetListEntry> children = new ArrayList<WidgetListEntry>();
+	@UiField
+	public ComplexPanel container;
 
-  @UiField
-  public ComplexPanel container;
+	@UiField
+	public Panel headerContainer;
 
-  @UiField
-  public Panel headerContainer;
+	private Map<Widget, Entry> map;
 
-  private Map<Widget, Entry> map;
+	private WidgetListAppearance appearance;
 
-  private WidgetListAppearance appearance;
+	private Widget header;
 
-  private Widget header;
+	public WidgetList() {
+		this(DEFAULT_APPEARANCE);
+	}
 
-  public WidgetList() {
-    this(DEFAULT_APPEARANCE);
-  }
+	public WidgetList(final WidgetListAppearance appearance) {
+		this.appearance = appearance;
+		initWidget(this.appearance.uiBinder().createAndBindUi(this));
+		map = new HashMap<>();
+	}
 
-  public WidgetList(WidgetListAppearance appearance) {
-    this.appearance = appearance;
-    initWidget(this.appearance.uiBinder().createAndBindUi(this));
-    map = new HashMap<Widget, Entry>();
-  }
+	@Override
+	public void add(final Widget w) {
 
-  @Override
-  public HandlerRegistration addSelectionHandler(SelectionHandler<Integer> handler) {
-    return addHandler(handler, SelectionEvent.getType());
-  }
+		final WidgetListEntry widgetListEntry = new WidgetListEntry(appearance);
+		widgetListEntry.setWidget(w);
+		final HandlerRegistration handlerRegistration = widgetListEntry.addTapHandler(event -> SelectionEvent.fire(WidgetList.this, container.getWidgetIndex(widgetListEntry)));
+		if (childCount == 0) {
+			widgetListEntry.addStyleName(appearance.css().widgetListEntryFirstChild());
+		}
+		map.put(w, new Entry(widgetListEntry, handlerRegistration));
+		container.add(widgetListEntry);
+		children.add(widgetListEntry);
 
-  @Override
-  public void add(Widget w) {
+		if (childCount > 0) {
+			children.get(childCount - 1).removeStyleName(appearance.css().widgetListEntryLastChild());
+		}
+		widgetListEntry.addStyleName(appearance.css().widgetListEntryLastChild());
 
-    final WidgetListEntry widgetListEntry = new WidgetListEntry(this.appearance);
-    widgetListEntry.setWidget(w);
-    HandlerRegistration handlerRegistration = widgetListEntry.addTapHandler(new TapHandler() {
-      @Override
-      public void onTap(TapEvent event) {
-        SelectionEvent.fire(WidgetList.this, container.getWidgetIndex(widgetListEntry));
-      }
-    });
-    if (childCount == 0) {
-      widgetListEntry.addStyleName(this.appearance.css().widgetListEntryFirstChild());
-    }
-    map.put(w, new Entry(widgetListEntry, handlerRegistration));
-    container.add(widgetListEntry);
-    children.add(widgetListEntry);
+		childCount++;
 
-    if (childCount > 0) {
-      children.get(childCount - 1).removeStyleName(this.appearance.css().widgetListEntryLastChild());
-    }
-    widgetListEntry.addStyleName(this.appearance.css().widgetListEntryLastChild());
+	}
 
-    childCount++;
+	@Override
+	public HandlerRegistration addSelectionHandler(final SelectionHandler<Integer> handler) {
+		return addHandler(handler, SelectionEvent.getType());
+	}
 
-  }
+	@Override
+	public void clear() {
+		container.clear();
+		for (final Entry entry : map.values()) {
+			entry.handlerRegistration.removeHandler();
+		}
+		map.clear();
+		children.clear();
+		childCount = 0;
+		if (header != null) {
+			add(header);
+		}
+	}
 
-  @Override
-  public void clear() {
-    container.clear();
-    for (Entry entry : map.values()) {
-      entry.handlerRegistration.removeHandler();
-    }
-    map.clear();
-    children.clear();
-    childCount = 0;
-    if(header!= null) {
-      add(header);
-    }
-  }
+	@UiFactory
+	public WidgetListAppearance getAppearance() {
+		return appearance;
+	}
 
-  @Override
-  public Iterator<Widget> iterator() {
-    return map.keySet().iterator();
-  }
+	public int getWidgetCount() {
+		return childCount;
+	}
 
-  @Override
-  public boolean remove(Widget w) {
-    Entry entry = map.remove(w);
-    if (entry == null)
-      return false;
-    // did we remove the last child?
-    if (children.get(childCount - 1) == entry.entry) {
-      // are there others in the list?
-      if (childCount - 2 >= 0) {
-        children.get(childCount - 2).addStyleName(this.appearance.css().widgetListEntryLastChild());
-      }
-    }
+	@Override
+	public Iterator<Widget> iterator() {
+		return map.keySet().iterator();
+	}
 
-    // did we remove the first child
-    if (children.get(0) == entry.entry) {
-      if (children.size() > 1) {
-        children.get(1).addStyleName(this.appearance.css().widgetListEntryFirstChild());
-      }
-    }
-    childCount--;
-    children.remove(entry);
-    entry.handlerRegistration.removeHandler();
-    return container.remove(entry.entry);
-  }
+	@SuppressWarnings("unlikely-arg-type")
+	@Override
+	public boolean remove(final Widget w) {
+		final Entry entry = map.remove(w);
+		if (entry == null) {
+			return false;
+		}
+		// did we remove the last child?
+		if (children.get(childCount - 1) == entry.entry) {
+			// are there others in the list?
+			if (childCount - 2 >= 0) {
+				children.get(childCount - 2).addStyleName(appearance.css().widgetListEntryLastChild());
+			}
+		}
 
-  /**
-   * Should the list be displayed with rounded corners
-   *
-   * @param round true to display with rounded corners
-   */
-  public void setRound(boolean round) {
-    if (round) {
-      addStyleName(this.appearance.css().round());
-    } else {
-      removeStyleName(this.appearance.css().round());
-    }
-  }
+		// did we remove the first child
+		if (children.get(0) == entry.entry) {
+			if (children.size() > 1) {
+				children.get(1).addStyleName(appearance.css().widgetListEntryFirstChild());
+			}
+		}
+		childCount--;
+		children.remove(entry);
+		entry.handlerRegistration.removeHandler();
+		return container.remove(entry.entry);
+	}
 
-  public int getWidgetCount() {
-    return childCount;
-  }
+	@UiChild(limit = 1,
+			tagname = "header")
+	public void setHeader(final Widget header) {
+		headerContainer.setVisible(header != null);
+		headerContainer.clear();
+		if (header != null) {
+			headerContainer.add(header);
+		}
+	}
 
-  public void setSelectAble(int index, boolean group) {
-    if (group) {
-      children.get(index).addStyleName(this.appearance.css().widgetListEntrySelectedable());
-    } else {
-      children.get(index).removeStyleName(this.appearance.css().widgetListEntrySelectedable());
-    }
-  }
+	/**
+	 * Should the list be displayed with rounded corners
+	 *
+	 * @param round
+	 *           true to display with rounded corners
+	 */
+	public void setRound(final boolean round) {
+		if (round) {
+			addStyleName(appearance.css().round());
+		} else {
+			removeStyleName(appearance.css().round());
+		}
+	}
 
-  @UiChild(limit = 1, tagname = "header")
-  public void setHeader(Widget header) {
-    headerContainer.setVisible(header != null);
-    headerContainer.clear();
-    if (header != null) {
-      headerContainer.add(header);
-    }
-  }
-
-  @UiFactory
-  public WidgetListAppearance getAppearance() {
-	  return appearance;
-  }
+	public void setSelectAble(final int index, final boolean group) {
+		if (group) {
+			children.get(index).addStyleName(appearance.css().widgetListEntrySelectedable());
+		} else {
+			children.get(index).removeStyleName(appearance.css().widgetListEntrySelectedable());
+		}
+	}
 }

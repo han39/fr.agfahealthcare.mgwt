@@ -25,85 +25,83 @@ import com.googlecode.mgwt.image.client.ImageConverter.ImageConverterCallback;
 
 public class ImageConverterGwtTestCase extends GWTTestCase {
 
-  interface ImageConverterTestBundle extends ClientBundle {
-    ImageConverterTestBundle INSTANCE = GWT
-        .create(ImageConverterTestBundle.class);
+	interface ImageConverterTestBundle extends ClientBundle {
+		ImageConverterTestBundle INSTANCE = GWT
+				.create(ImageConverterTestBundle.class);
 
-    @Source("alpha_test_image.png")
-    ImageResource knownImage();
-  }
+		@Source("alpha_test_image.png")
+		ImageResource knownImage();
+	}
 
-  @Override
-  public String getModuleName() {
-    return "com.googlecode.mgwt.image.Image";
-  }
+	@Override
+	public String getModuleName() {
+		return "com.googlecode.mgwt.image.Image";
+	}
 
-  @DoNotRunWith(Platform.HtmlUnitUnknown)
-  public void testConvert_withKnownImage() {
-    ImageConverter imageConverter = new ImageConverter();
-    ImageResource convertedResource = null;
-    
-    ImageConverterCallback callback = new ImageConverterCallback()
-    {
-      public ImageResource convertedResource = null;
-      
-      @Override
-      public void onSuccess(ImageResource convertedResource)
-      {
-        this.convertedResource = convertedResource;
-      }
-      
-    };
+	@DoNotRunWith(Platform.HtmlUnitUnknown)
+	public void testConvert_withKnownImage() {
+		final ImageConverter imageConverter = new ImageConverter();
+		final ImageResource convertedResource = null;
 
-    imageConverter.convert(ImageConverterTestBundle.INSTANCE.knownImage(), "#0000F1", callback);
-    
-    delayTestFinish(200);
-    
-    /*
-     * Dirty hack to test, should be improved.
-     */
-    if (ua().contains("chrome/36")) {
-      // Chrome 36
-      assertEquals(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAN0lEQVQIW2NkAIP/jEAChJmAxH8OBoYPQMwgAMQKQIEPbkAJKaCEAhDzAAU+TgPKGAGxBhDzAwAOPQijzPdtmwAAAABJRU5ErkJggg==",
-          convertedResource.getSafeUri().asString());
-    } else if (ua().contains("rv:11.0")) {
-      // IE11
-      assertEquals(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAA6SURBVBhXY2QAg/8gGoSZgMR/DiADiH8IMDD8UQAKfHFjYPgrBRRUACriAQp8nAZkGAFVajAwMPADACZjCanGPO3dAAAAAElFTkSuQmCC",
-          convertedResource.getSafeUri().asString());
-    } else if (ua().contains("iphone") && ua().contains("OS 7_1_2")) {
-      // iphone 7.1.2
-      assertEquals(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADElEQVQIHWNgoBwAAABEAAFFxiNWAAAAAElFTkSuQmCC",
-          convertedResource.getSafeUri().asString());
-    } else if (ua()
-        .equalsIgnoreCase(
-            "Mozilla/5.0 (Mobile; ALCATELOneTouch4012X; rv:18.1) Gecko/18.1 Firefox/18.1")) {
-      // FF OS 1.1.0.0
-      assertEquals(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADElEQVQImWNgoBwAAABEAAGC/mVLAAAAAElFTkSuQmCC",
-          convertedResource.getSafeUri().asString());
-    } else if (ua()
-        .equalsIgnoreCase(
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:24.0) Gecko/20100101 Firefox/24.0")) {
-      // FF 24
-      assertEquals(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADElEQVQImWNgoBwAAABEAAGC/mVLAAAAAElFTkSuQmCC",
-          convertedResource.getSafeUri().asString());
-    } else if (ua()
-        .equalsIgnoreCase(
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/537.75.14")) {
-      // safari 7
-      assertEquals(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAOUlEQVQIHWNkAIP/jEAKhJmAxH8OBoYPQMwgAMQKLAwMH+0YGJilgBIKQMwDFGAMADKMgLIaQDY/AAdqCG2g3jC2AAAAAElFTkSuQmCC",
-          convertedResource.getSafeUri().asString());
-    } else {
-      fail("browser has no value in test");
-    }
-  }
+		final ImageConverterCallback callback = new ImageConverterCallback() {
+			public ImageResource convertedResource = null;
 
-  private native String ua() /*-{
+			@Override
+			public void onSuccess(final ImageResource convertedResource) {
+				this.convertedResource = convertedResource;
+			}
+
+		};
+
+		imageConverter.convert(ImageConverterTestBundle.INSTANCE.knownImage(), "#0000F1", callback);
+
+		delayTestFinish(200);
+
+		/*
+		 * Dirty hack to test, should be improved.
+		 */
+		if (ua().contains("chrome/36")) {
+			// Chrome 36
+			assertEquals(
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAN0lEQVQIW2NkAIP/jEAChJmAxH8OBoYPQMwgAMQKQIEPbkAJKaCEAhDzAAU+TgPKGAGxBhDzAwAOPQijzPdtmwAAAABJRU5ErkJggg==",
+					convertedResource.getSafeUri().asString());
+		} else if (ua().contains("rv:11.0")) {
+			// IE11
+			assertEquals(
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAA6SURBVBhXY2QAg/8gGoSZgMR/DiADiH8IMDD8UQAKfHFjYPgrBRRUACriAQp8nAZkGAFVajAwMPADACZjCanGPO3dAAAAAElFTkSuQmCC",
+					convertedResource.getSafeUri().asString());
+		} else if (ua().contains("iphone") && ua().contains("OS 7_1_2")) {
+			// iphone 7.1.2
+			assertEquals(
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADElEQVQIHWNgoBwAAABEAAFFxiNWAAAAAElFTkSuQmCC",
+					convertedResource.getSafeUri().asString());
+		} else if (ua()
+				.equalsIgnoreCase(
+						"Mozilla/5.0 (Mobile; ALCATELOneTouch4012X; rv:18.1) Gecko/18.1 Firefox/18.1")) {
+			// FF OS 1.1.0.0
+			assertEquals(
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADElEQVQImWNgoBwAAABEAAGC/mVLAAAAAElFTkSuQmCC",
+					convertedResource.getSafeUri().asString());
+		} else if (ua()
+				.equalsIgnoreCase(
+						"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:24.0) Gecko/20100101 Firefox/24.0")) {
+			// FF 24
+			assertEquals(
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAADElEQVQImWNgoBwAAABEAAGC/mVLAAAAAElFTkSuQmCC",
+					convertedResource.getSafeUri().asString());
+		} else if (ua()
+				.equalsIgnoreCase(
+						"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/537.75.14")) {
+			// safari 7
+			assertEquals(
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAOUlEQVQIHWNkAIP/jEAKhJmAxH8OBoYPQMwgAMQKLAwMH+0YGJilgBIKQMwDFGAMADKMgLIaQDY/AAdqCG2g3jC2AAAAAElFTkSuQmCC",
+					convertedResource.getSafeUri().asString());
+		} else {
+			fail("browser has no value in test");
+		}
+	}
+
+	private native String ua() /*-{
    return  $wnd.navigator.userAgent.toLowerCase();
   }-*/;
 }

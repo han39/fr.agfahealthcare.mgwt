@@ -14,7 +14,6 @@
 package com.googlecode.mgwt.ui.client.widget.list.celllist;
 
 import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
@@ -34,279 +33,283 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.Tap;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.dom.client.recognizer.EventPropagator;
-import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchWidgetImpl;
 
 /**
  *
  * A widget that renders its children as a list
  *
- * You can control the markup of the children by using the Cell interface, therefore you can render
- * any kind of arbitrary markup
- * @param <T> the type of the model to render
+ * You can control the markup of the children by using the Cell interface, therefore you can render any kind of arbitrary markup
+ *
+ * @param <T>
+ *           the type of the model to render
  */
 public class CellList<T> extends Widget implements HasCellSelectedHandler {
 
+	public interface EntryTemplate {
+		SafeHtml li(int idx, String classes, SafeHtml cellContents);
+	}
 
-  public interface EntryTemplate {
-    SafeHtml li(int idx, String classes, SafeHtml cellContents);
-  }
+	private class InternalTouchHandler implements TouchHandler {
 
-  protected static final EventPropagator EVENT_PROPAGATOR = GWT.create(EventPropagator.class);
+		private boolean moved;
+		private int index;
+		private Element node;
+		private int x;
+		private int y;
+		private boolean started;
+		private Element originalElement;
 
+		@Override
+		public void onTouchCancel(final TouchCancelEvent event) {
 
-  private class InternalTouchHandler implements TouchHandler {
+		}
 
-    private boolean moved;
-    private int index;
-    private Element node;
-    private int x;
-    private int y;
-    private boolean started;
-    private Element originalElement;
+		@Override
+		public void onTouchEnd(final TouchEndEvent event) {
+			if (node != null) {
+				node.removeClassName(CellList.this.appearance.css().selected());
+				stopTimer();
+			}
+			if (started && !moved && index != -1) {
+				fireSelectionAtIndex(index, originalElement);
+			}
+			node = null;
+			started = false;
 
-    @Override
-    public void onTouchCancel(TouchCancelEvent event) {
+		}
 
-    }
+		@Override
+		public void onTouchMove(final TouchMoveEvent event) {
+			final Touch touch = event.getTouches().get(0);
+			if (Math.abs(touch.getPageX() - x) > Tap.RADIUS
+					|| Math.abs(touch.getPageY() - y) > Tap.RADIUS) {
+				moved = true;
+				// deselect
+				if (node != null) {
+					node.removeClassName(CellList.this.appearance.css().selected());
+					stopTimer();
+				}
 
-    @Override
-    public void onTouchMove(TouchMoveEvent event) {
-      Touch touch = event.getTouches().get(0);
-      if (Math.abs(touch.getPageX() - x) > Tap.RADIUS
-          || Math.abs(touch.getPageY() - y) > Tap.RADIUS) {
-        moved = true;
-        // deselect
-        if (node != null) {
-          node.removeClassName(CellList.this.appearance.css().selected());
-          stopTimer();
-        }
+			}
 
-      }
+		}
 
-    }
+		@Override
+		public void onTouchStart(final TouchStartEvent event) {
+			started = true;
 
-    @Override
-    public void onTouchEnd(TouchEndEvent event) {
-      if (node != null) {
-        node.removeClassName(CellList.this.appearance.css().selected());
-        stopTimer();
-      }
-      if (started && !moved && index != -1) {
-        fireSelectionAtIndex(index, originalElement);
-      }
-      node = null;
-      started = false;
+			x = event.getTouches().get(0).getPageX();
+			y = event.getTouches().get(0).getPageY();
 
-    }
+			if (node != null) {
+				node.removeClassName(CellList.this.appearance.css().selected());
+			}
+			moved = false;
+			index = -1;
+			// Get the event target.
+			EventTarget eventTarget = event.getNativeEvent().getEventTarget();
+			if (eventTarget == null) {
+				return;
+			}
 
-    @Override
-    public void onTouchStart(TouchStartEvent event) {
-      started = true;
+			// no textnode or element node
+			if (!Node.is(eventTarget) && !Element.is(eventTarget)) {
+				return;
+			}
 
-      x = event.getTouches().get(0).getPageX();
-      y = event.getTouches().get(0).getPageY();
+			// text node use the parent..
+			if (Node.is(eventTarget) && !Element.is(eventTarget)) {
+				final Node target = Node.as(eventTarget);
+				eventTarget = target.getParentElement().cast();
+			}
 
-      if (node != null) {
-        node.removeClassName(CellList.this.appearance.css().selected());
-      }
-      moved = false;
-      index = -1;
-      // Get the event target.
-      EventTarget eventTarget = event.getNativeEvent().getEventTarget();
-      if (eventTarget == null) {
-        return;
-      }
+			// no element
+			if (!Element.is(eventTarget)) {
+				return;
+			}
+			Element target = eventTarget.cast();
 
-      // no textnode or element node
-      if (!Node.is(eventTarget) && !Element.is(eventTarget)) {
-        return;
-      }
+			originalElement = target;
 
-      // text node use the parent..
-      if (Node.is(eventTarget) && !Element.is(eventTarget)) {
-        Node target = Node.as(eventTarget);
-        eventTarget = target.getParentElement().cast();
-      }
+			// Find cell
+			String idxString = "";
+			while (target != null && (idxString = target.getAttribute("__idx")).length() == 0) {
 
-      // no element
-      if (!Element.is(eventTarget)) {
-        return;
-      }
-      Element target = eventTarget.cast();
+				target = target.getParentElement();
+			}
+			if (idxString.length() > 0) {
+				try {
+					index = Integer.parseInt(idxString);
+					node = target;
+					startTimer(node);
+				} catch (final Exception e) {}
+			}
 
-      originalElement = target;
+		}
+	}
 
-      // Find cell
-      String idxString = "";
-      while ((target != null) && ((idxString = target.getAttribute("__idx")).length() == 0)) {
+	protected static final EventPropagator EVENT_PROPAGATOR = GWT.create(EventPropagator.class);
 
-        target = target.getParentElement();
-      }
-      if (idxString.length() > 0) {
-        try {
-          index = Integer.parseInt(idxString);
-          node = target;
-          startTimer(node);
-        } catch (Exception e) {
-        }
-      }
+	private static final CellListAppearance DEFAULT_APPEARANCE = GWT.create(CellListAppearance.class);
 
-    }
-  }
+	private static final TouchWidgetImpl impl = GWT.create(TouchWidgetImpl.class);
 
-  private static final CellListAppearance DEFAULT_APPEARANCE = GWT.create(CellListAppearance.class);
+	protected final Cell<T> cell;
 
-  private static final TouchWidgetImpl impl = GWT.create(TouchWidgetImpl.class);
+	protected Timer timer;
 
-  protected final Cell<T> cell;
+	@UiField
+	public Element container;
+	private CellListAppearance appearance;
 
-  protected Timer timer;
+	protected EntryTemplate entryTemplate;
 
-  @UiField
-  public Element container;
-  private CellListAppearance appearance;
+	/**
+	 * Construct a CellList
+	 *
+	 * @param cell
+	 *           the cell to use
+	 */
+	public CellList(final Cell<T> cell) {
+		this(cell, DEFAULT_APPEARANCE);
+	}
 
-  protected EntryTemplate entryTemplate;
+	/**
+	 * Construct a celllist with a given cell and css
+	 *
+	 * @param cell
+	 *           the cell to use
+	 * @param css
+	 *           the css to use
+	 */
+	public CellList(final Cell<T> cell, final CellListAppearance appearance) {
 
-  /**
-   * Construct a CellList
-   *
-   * @param cell the cell to use
-   */
-  public CellList(Cell<T> cell) {
-    this(cell, DEFAULT_APPEARANCE);
-  }
+		this.cell = cell;
+		this.appearance = appearance;
 
-  /**
-   * Construct a celllist with a given cell and css
-   *
-   * @param cell the cell to use
-   * @param css the css to use
-   */
-  public CellList(Cell<T> cell, CellListAppearance appearance) {
+		setElement(this.appearance.uiBinder().createAndBindUi(this));
+		entryTemplate = this.appearance.getEntryTemplate();
 
-    this.cell = cell;
-    this.appearance = appearance;
+		final InternalTouchHandler touchHandler = new InternalTouchHandler();
+		impl.addTouchHandler(this, touchHandler);
+	}
 
-    setElement(this.appearance.uiBinder().createAndBindUi(this));
-    entryTemplate = this.appearance.getEntryTemplate();
+	@Override
+	public HandlerRegistration addCellSelectedHandler(final CellSelectedHandler cellSelectedHandler) {
+		return addHandler(cellSelectedHandler, CellSelectedEvent.getType());
+	}
 
-    InternalTouchHandler touchHandler = new InternalTouchHandler();
-    impl.addTouchHandler(this, touchHandler);
-  }
+	@UiFactory
+	public CellListAppearance getAppearance() {
+		return appearance;
+	}
 
-  public HandlerRegistration addCellSelectedHandler(CellSelectedHandler cellSelectedHandler) {
-    return addHandler(cellSelectedHandler, CellSelectedEvent.getType());
-  }
+	/**
+	 * Render a List of models in this cell list
+	 *
+	 * @param models
+	 *           the list of models to render
+	 */
+	public void render(final List<T> models) {
 
-  /**
-   * Render a List of models in this cell list
-   *
-   * @param models the list of models to render
-   */
-  public void render(List<T> models) {
+		final SafeHtmlBuilder sb = new SafeHtmlBuilder();
 
-    SafeHtmlBuilder sb = new SafeHtmlBuilder();
+		for (int i = 0 ; i < models.size() ; i++) {
 
-    for (int i = 0; i < models.size(); i++) {
+			final T model = models.get(i);
 
-      T model = models.get(i);
+			final SafeHtmlBuilder cellBuilder = new SafeHtmlBuilder();
 
-      SafeHtmlBuilder cellBuilder = new SafeHtmlBuilder();
+			String clazz = this.appearance.css().entry() + " ";
+			if (cell.canBeSelected(model)) {
+				clazz += this.appearance.css().canbeSelected() + " ";
+			}
 
-      String clazz = this.appearance.css().entry() + " ";
-      if (cell.canBeSelected(model)) {
-        clazz += this.appearance.css().canbeSelected() + " ";
-      }
+			if (i == 0) {
+				clazz += this.appearance.css().first() + " ";
+			}
 
-      if (i == 0) {
-        clazz += this.appearance.css().first() + " ";
-      }
+			if (models.size() - 1 == i) {
+				clazz += this.appearance.css().last() + " ";
+			}
 
-      if (models.size() - 1 == i) {
-        clazz += this.appearance.css().last() + " ";
-      }
+			cell.render(cellBuilder, model);
 
-      cell.render(cellBuilder, model);
+			sb.append(entryTemplate.li(i, clazz, cellBuilder.toSafeHtml()));
+		}
 
-      sb.append(entryTemplate.li(i, clazz, cellBuilder.toSafeHtml()));
-    }
+		final String html = sb.toSafeHtml().asString();
 
-    final String html = sb.toSafeHtml().asString();
+		getElement().setInnerHTML(html);
 
-    getElement().setInnerHTML(html);
+		if (models.size() > 0) {
+			final String innerHTML = getElement().getInnerHTML();
+			if ("".equals(innerHTML.trim())) {
+				fixBug(html);
+			}
+		}
 
-    if (models.size() > 0) {
-      String innerHTML = getElement().getInnerHTML();
-      if ("".equals(innerHTML.trim())) {
-        fixBug(html);
-      }
-    }
+	}
 
-  }
+	/**
+	 * Set a selected element in the celllist
+	 *
+	 * @param index
+	 *           the index of the element
+	 * @param selected
+	 *           true to select the element, false to deselect
+	 */
+	public void setSelectedIndex(final int index, final boolean selected) {
+		final Node node = getElement().getChild(index);
+		final Element li = Element.as(node);
+		if (selected) {
+			li.addClassName(this.appearance.css().selected());
+		} else {
+			li.removeClassName(this.appearance.css().selected());
+		}
+	}
 
-  /**
-   * Set a selected element in the celllist
-   *
-   * @param index the index of the element
-   * @param selected true to select the element, false to deselect
-   */
-  public void setSelectedIndex(int index, boolean selected) {
-    Node node = getElement().getChild(index);
-    Element li = Element.as(node);
-    if (selected) {
-      li.addClassName(this.appearance.css().selected());
-    } else {
-      li.removeClassName(this.appearance.css().selected());
-    }
-  }
+	protected void fireSelectionAtIndex(final int index, final Element element) {
+		EVENT_PROPAGATOR.fireEvent(this, new CellSelectedEvent(index, element));
+	}
 
-  protected void fixBug(final String html) {
-    new Timer() {
+	protected void fixBug(final String html) {
+		new Timer() {
 
-      @Override
-      public void run() {
-        getElement().setInnerHTML(html);
-        String innerHTML = getElement().getInnerHTML();
-        if ("".equals(innerHTML.trim())) {
-          fixBug(html);
+			@Override
+			public void run() {
+				getElement().setInnerHTML(html);
+				final String innerHTML = getElement().getInnerHTML();
+				if ("".equals(innerHTML.trim())) {
+					fixBug(html);
 
-        }
+				}
 
-      }
-    }.schedule(100);
-  }
+			}
+		}.schedule(100);
+	}
 
-  protected void fireSelectionAtIndex(int index, Element element) {
-    EVENT_PROPAGATOR.fireEvent(this, new CellSelectedEvent(index, element));
-  }
+	protected void startTimer(final Element node) {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 
-  @UiFactory
-  public CellListAppearance getAppearance() {
-	  return appearance;
-  }
+		timer = new Timer() {
 
-  protected void startTimer(final Element node) {
-    if (timer != null) {
-      timer.cancel();
-      timer = null;
-    }
+			@Override
+			public void run() {
+				node.addClassName(CellList.this.appearance.css().selected());
+			}
+		};
+		timer.schedule(150);
+	}
 
-    timer = new Timer() {
-
-      @Override
-      public void run() {
-        node.addClassName(CellList.this.appearance.css().selected());
-      }
-    };
-    timer.schedule(150);
-  }
-
-  protected void stopTimer() {
-    if (timer != null) {
-      timer.cancel();
-      timer = null;
-    }
-  }
+	protected void stopTimer() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
+	}
 }

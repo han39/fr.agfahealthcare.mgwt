@@ -55,8 +55,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -211,39 +211,28 @@
 
 	<profiles>
 		<profile>
-			<id>nexus</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<repo-id>nexus</repo-id>
-				<releases-url>http://dijsuv015.agfahealthcare.com:8081/nexus/content/repositories/releases</releases-url>
-				<snapshots-url>http://dijsuv015.agfahealthcare.com:8081/nexus/content/repositories/snapshots</snapshots-url>
-			</properties>
-		</profile>
-		<profile>
 			<id>public</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<repo-id>public</repo-id>
-				<releases-url>http://vps21846.ovh.net:8081/nexus/content/repositories/releases</releases-url>
-				<snapshots-url>http://vps21846.ovh.net:8081/nexus/content/repositories/snapshots</snapshots-url>
+				<releases-url>https://repo.srd-restauration.fr/repository/maven-releases</releases-url>
+				<snapshots-url>https://repo.srd-restauration.fr/repository/maven-snapshots</snapshots-url>
 			</properties>
 		</profile>
 	</profiles>
 
 	<distributionManagement>
 		<repository>
-			<id>${repo-id}</id>
+			<id>public</id>
 			<name>releases</name>
-			<url>${releases-url}</url>
+			<url>https://repo.srd-restauration.fr/repository/maven-releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>${repo-id}</id>
+			<id>public</id>
 			<name>snapshots</name>
-			<url>${snapshots-url}</url>
+			<url>https://repo.srd-restauration.fr/repository/maven-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>

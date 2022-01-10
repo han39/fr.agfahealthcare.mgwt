@@ -22,106 +22,101 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasText;
 import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.mouse.SimulatedTouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchWidget;
 
 /**
  * Base class for all buttons
  */
+@SuppressWarnings("deprecation")
 public abstract class ButtonBase extends TouchWidget implements HasText {
 
-  private boolean active;
-  // a temp fix where we no longer add the default touch handlers to the button
-  // until a call is made to set the element for the widget. This is required since
-  // it is not possible to add a bitless dom handler until the element has been set
-  private boolean defaultHandlersAdded;
-  
-  private final ButtonBaseAppearance baseAppearance;
+	private boolean active;
+	// a temp fix where we no longer add the default touch handlers to the button
+	// until a call is made to set the element for the widget. This is required since
+	// it is not possible to add a bitless dom handler until the element has been set
+	private boolean defaultHandlersAdded;
 
-  /**
-   * Construct a button with a given element and css
-   *
-   * @param element the element to use
-   * @param css the css to use
-   */
-  public ButtonBase(ButtonBaseAppearance appearance) {
-    this.baseAppearance = appearance;
-  }
+	private final ButtonBaseAppearance baseAppearance;
 
-  @Override
-  public String getText() {
-    return getElement().getInnerText();
-  }
+	/**
+	 * Construct a button with a given element and css
+	 *
+	 * @param element
+	 *           the element to use
+	 * @param css
+	 *           the css to use
+	 */
+	public ButtonBase(final ButtonBaseAppearance appearance) {
+		baseAppearance = appearance;
+	}
 
-  @Override
-  public void setText(String text) {
-    getElement().setInnerText(text);
-  }
+	public ButtonBaseAppearance getAppearance() {
+		return baseAppearance;
+	}
 
-  public boolean isActive() {
-    return active;
-  }
+	@Override
+	public String getText() {
+		return getElement().getInnerText();
+	}
 
-  @Override
-  protected void setElement(Element elem) {
-    super.setElement(elem);
-    
-    if (!defaultHandlersAdded) {
-    
-      addTouchHandler(new TouchHandler() {
+	public boolean isActive() {
+		return active;
+	}
 
-        @Override
-        public void onTouchCancel(TouchCancelEvent event) {
-          event.stopPropagation();
-          event.preventDefault();
-          removeStyleName(ButtonBase.this.baseAppearance.css().active());
-          active = false;
-        }
+	@Override
+	public void setText(final String text) {
+		getElement().setInnerText(text);
+	}
 
-        @Override
-        public void onTouchEnd(TouchEndEvent event) {
-          event.stopPropagation();
-          event.preventDefault();
-          removeStyleName(ButtonBase.this.baseAppearance.css().active());
-          if (event instanceof SimulatedTouchEndEvent) {
-            DOM.releaseCapture(getElement());
-          }
-          active = false;
-        }
+	@Override
+	protected void setElement(final Element elem) {
+		super.setElement(elem);
 
-        @Override
-        public void onTouchMove(TouchMoveEvent event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
+		if (!defaultHandlersAdded) {
 
-        @Override
-        public void onTouchStart(TouchStartEvent event) {
-          event.stopPropagation();
-          event.preventDefault();
-          addStyleName(ButtonBase.this.baseAppearance.css().active());
-          if (event instanceof SimulatedTouchStartEvent) {
-            DOM.setCapture(getElement());
-          }
-          active = true;
-        }
-      });
-      
-      addTapHandler(new TapHandler() {
+			addTouchHandler(new TouchHandler() {
 
-        @Override
-        public void onTap(TapEvent event) {
-          removeStyleName(ButtonBase.this.baseAppearance.css().active());
-        }
-      });
-      defaultHandlersAdded = true;
-    }
-  }
-  
-  public ButtonBaseAppearance getAppearance() {
-    return baseAppearance;
-  }
-  
+				@Override
+				public void onTouchCancel(final TouchCancelEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					removeStyleName(baseAppearance.css().active());
+					active = false;
+				}
+
+				@Override
+				public void onTouchEnd(final TouchEndEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					removeStyleName(baseAppearance.css().active());
+					if (event instanceof SimulatedTouchEndEvent) {
+						DOM.releaseCapture(getElement());
+					}
+					active = false;
+				}
+
+				@Override
+				public void onTouchMove(final TouchMoveEvent event) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+
+				@Override
+				public void onTouchStart(final TouchStartEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					addStyleName(baseAppearance.css().active());
+					if (event instanceof SimulatedTouchStartEvent) {
+						DOM.setCapture(getElement());
+					}
+					active = true;
+				}
+			});
+
+			addTapHandler(event -> removeStyleName(baseAppearance.css().active()));
+			defaultHandlersAdded = true;
+		}
+	}
+
 }
