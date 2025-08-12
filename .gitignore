@@ -8,3 +8,4 @@ gwt-unitCache
 war/
 www-test/
 /bin
+/build/
